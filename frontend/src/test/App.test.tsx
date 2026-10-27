@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import App from "../App";
 import { MAX_IMAGE_BYTES, validateImage } from "../components/ImageUploader";
@@ -15,6 +16,8 @@ afterEach(() => {
 beforeEach(() => {
   URL.createObjectURL = vi.fn(() => "blob:preview");
   URL.revokeObjectURL = vi.fn();
+  window.scrollTo = vi.fn();
+  window.location.hash = "#/analyze";
 });
 const photo = () => new File(["image"], "meal.png", { type: "image/png" });
 describe("upload validation", () => {
@@ -183,4 +186,59 @@ it('validates an empty form without a cloud request', () => {
  fireEvent.submit(screen.getByRole('button',{name:/Analyze photo/}).closest('form')!);
  expect(screen.getByRole('alert').textContent).toContain('Choose a food photo');
  expect(fetchMock).not.toHaveBeenCalled();
+});
+
+describe('landing page sections and sample showcase', () => {
+  it('renders landing page navigation links and hero CTA', () => {
+    render(<App initialRoute="landing" />);
+    const nav = screen.getByRole('navigation', { name: 'Main navigation' });
+    expect(within(nav).getByRole('link', { name: 'How It Works' })).toHaveProperty('hash', '#how-it-works');
+    expect(within(nav).getByRole('link', { name: 'Sample Result' })).toHaveProperty('hash', '#sample-result');
+    expect(within(nav).getByRole('link', { name: 'Why Ranges?' })).toHaveProperty('hash', '#why-ranges');
+    expect(within(nav).getByRole('link', { name: 'Privacy' })).toHaveProperty('hash', '#privacy');
+    expect(within(nav).getByRole('button', { name: /Launch Analyzer/ })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Launch FoodLens Analyzer/ })).toBeTruthy();
+    expect(screen.getByText('✔ Honest Ranges')).toBeTruthy();
+    expect(screen.getByText('✔ Zero Saved Photos')).toBeTruthy();
+    expect(screen.getByText('✔ Camera Ready')).toBeTruthy();
+  });
+
+  it('renders the How It Works steps and Sample Meal Showcase card', () => {
+    render(<App initialRoute="landing" />);
+    expect(screen.getByRole('heading', { name: 'How FoodLens AI Works' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Snap or Upload' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'AI Vision Analysis' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Honest Range Estimates' })).toBeTruthy();
+
+    // Sample meal showcase verification
+    expect(screen.getByText('Sample illustrative result')).toBeTruthy();
+    expect(screen.getByText('Mediterranean Quinoa & Chickpea Bowl')).toBeTruthy();
+    expect(screen.getByText('380–480 kcal')).toBeTruthy();
+    expect(screen.getByText('14–19 g')).toBeTruthy();
+    expect(screen.getByText('Cooked quinoa')).toBeTruthy();
+    expect(screen.getByText('Seasoned chickpeas')).toBeTruthy();
+    expect(screen.getByText(/One standard shallow bowl/)).toBeTruthy();
+  });
+
+  it('renders the Photo Reality Gap and Trust & Safety sections', () => {
+    render(<App initialRoute="landing" />);
+    expect(screen.getByRole('heading', { name: 'The Photo Reality Gap' })).toBeTruthy();
+    expect(screen.getByText('The Myth of Exact Calories')).toBeTruthy();
+    expect(screen.getByText('The FoodLens Honest Approach')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Built with Privacy and Restraint' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Zero Photo Storage' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Backend-Only Isolation' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Educational & Non-Medical' })).toBeTruthy();
+  });
+
+  it('navigates from landing page to analyzer workspace and back', () => {
+    render(<App initialRoute="landing" />);
+    expect(screen.queryByLabelText('Choose a food photo')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /Launch FoodLens Analyzer/ }));
+    expect(screen.getByLabelText('Choose a food photo')).toBeTruthy();
+    expect(screen.getByRole('button', { name: '← Back to Overview' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: '← Back to Overview' }));
+    expect(screen.queryByLabelText('Choose a food photo')).toBeNull();
+    expect(screen.getByRole('heading', { name: 'How FoodLens AI Works' })).toBeTruthy();
+  });
 });

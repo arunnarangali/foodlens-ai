@@ -83,6 +83,34 @@ Prepared Go static hosting, Render PORT handling, a multi-stage non-root Docker 
 
 Renamed the workflow to .github/workflows/foodlens-ci.yml. Contents are unchanged; deployment instructions and links now use the new path.
 
+## Product landing page and sample showcase — 2026-10-27
+
+- Created `frontend/src/components/LandingSections.tsx` featuring `HowItWorks` (3 visual steps), `SampleMealShowcase` (*Mediterranean Quinoa & Chickpea Bowl*, *380–480 kcal* with transparent assumptions and illustrative disclosure badge), `PhotoRealityGap` (2-column comparison against deceptive exact calorie tracking), and `TrustAndSafety` (ephemeral storage, backend isolation, educational purpose).
+- Updated `frontend/src/App.tsx` with header navigation anchors, enriched hero CTA with feature guarantee pills, `#analyzer` anchor link, and footer links.
+- Expanded `frontend/src/style.css` with responsive layout classes following the botanical design system and Georgia serif typography.
+- Added landing page unit tests to `frontend/src/test/App.test.tsx`; 28/28 frontend Vitest tests pass and production build succeeds. Backend test suites continue to pass 100%.
+
+
 ## Native-runtime deployment simplification — 2026-10-27
 
 Removed Dockerfile, .dockerignore, the GitHub Actions workflow and the CI-only smoke script. Current hosting instructions use one native Render Go service with direct frontend/Go build commands and manual deployment (Auto-Deploy Off). Local backend tests/vet/compile and frontend TypeScript/25 tests/build pass. No application feature or secret changed; actual Render deployment remains outstanding.
+
+## Separate pages architecture & full-width responsive navbar — 2026-10-27
+
+- Decoupled the application into two dedicated pages using client-side hash routing (`#/` for Landing Page and `#/analyze` for dedicated Analyzer Workspace), removing the upload cards from the landing scroll flow.
+- Created `frontend/src/components/AnalyzerWorkspace.tsx`: dedicated workspace screen with a top-bar `← Back to Overview` button, photo upload card, and analysis results card.
+- Created `frontend/src/components/LandingPage.tsx`: standalone marketing landing page with full-width navigation, hero CTA, How It Works, Sample Meal Showcase card (*380–480 kcal*), Reality Gap comparison, and Trust & Safety pillars.
+- Updated `frontend/src/style.css` to make the navigation bar take **100% full width of the screen** with fluid padding, sticky top positioning, and responsive breakpoints (`@media (max-width: 860px)` and `@media (max-width: 580px)`) preventing overflow on mobile.
+- Fixed navbar flex layout bug where `.primary` rule caused `width: 100%` and `margin-top` to squash `.nav-links a` text onto multiple vertical lines; added `white-space: nowrap`, `flex-shrink: 0`, and explicit button sizing.
+- Updated `frontend/src/test/App.test.tsx` and `frontend/src/test/CameraCapture.test.tsx`; all 29/29 frontend tests pass cleanly, production build succeeds, and backend Go test suites pass 100%.
+
+## Single-screen viewport workspace & landing layout fixes — 2026-10-27
+
+- Implemented single-screen viewport-locked mode for the Analyzer Workspace (`height: 100vh; overflow: hidden` on desktop `≥ 860px`): header and compact intro remain fixed, and both upload and analysis cards fill the viewport with independent internal sleek thin scrollbars (`scrollbar-width: thin; scrollbar-color: #cbd8c5 transparent`).
+- Resolved landing page visual defects: decoupled the Sample Meal Showcase into its own top-level section (`#sample-result`), eliminating the cropped step cards floating at the top of the viewport and removing the redundant outer card-in-card container.
+- Added global `html { scroll-behavior: smooth; scroll-padding-top: 88px; }` preventing sticky navbar from clipping section titles on anchor navigation.
+- Harmonized container max-width to `1260px` across header, content, and footer, and equalized card heights in comparison and trust grids.
+- Scaled down typography, paddings, and card dimensions across all pages to a refined, high-density proportional layout (reduced base font to 14px, tightened header and card paddings, compact buttons, and unified max-width to 1120px).
+- All 29/29 Vitest tests pass, production bundle compiles cleanly, and Go backend tests pass 100%.
+
+

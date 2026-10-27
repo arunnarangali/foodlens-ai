@@ -9,6 +9,7 @@ beforeEach(() => {
   stop.mockClear();
   URL.createObjectURL = vi.fn(() => 'blob:camera-photo');
   URL.revokeObjectURL = vi.fn();
+  window.location.hash = '#/analyze';
   vi.stubGlobal('navigator', {
     mediaDevices: { getUserMedia: vi.fn().mockResolvedValue(stream) },
   });
