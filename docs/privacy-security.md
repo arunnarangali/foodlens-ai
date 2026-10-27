@@ -24,3 +24,9 @@ API errors use controlled messages, application/json and no-store. Health report
 ## Review evidence
 
 Automated tests cover auth/header formation with synthetic keys, redirect rejection, safe errors, response limits, cancellation and invalid output. See testing.md for actual results and repository checks. No real key was available for live inference. Do not treat mock success as a live security or model-quality certification. Inspect staged changes and history before publishing; revoke/rotate a real key if it is ever exposed.
+
+## Deployment controls
+
+Private env files, Git metadata and local media are excluded from Docker context; final-stage COPY includes only the server and built assets. The runtime uses non-root UID 10001 and CA certificates; no key build argument or compiled frontend secret exists. Render's runtime key remains private. The static handler exposes only frontend/dist and never lists directories or serves hidden files. No CORS broadening is needed because frontend and API share an HTTPS origin.
+
+Public visitors can invoke the analysis endpoint using the service's provider allowance; this MVP does not add user authentication or abuse controls. Check provider-side budgets/limits and restrict the demo audience before broad sharing. Container non-root/file-exclusion checks are written in CI but not locally executed because Docker daemon access is denied. Do not confuse static source review with a verified deployment.

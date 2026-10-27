@@ -64,3 +64,15 @@ Camera access is browser/permission/secure-context dependent, so the existing fi
 ## Prompt and feature history consolidation — 2026-10-27
 
 The old prompt log mixed unused scaffold templates with execution entries and still contained a no-implementation placeholder. Consolidated the available conversation and repository evidence, separated undone/superseded work from current features and removed the stale placeholder. Public-listing, mock-test and live-account evidence are distinguished; unknown history was not reconstructed as fact.
+
+## Single-service deployment — 2026-10-27
+
+- The app's fixed loopback binding would not expose a Render service. Added validated platform PORT support while preserving key-only private setup and loopback local defaults.
+- Existing API-only catch-all would return JSON 404 for the frontend. Added a separate static handler restricted to built assets; unknown /api paths keep the JSON API contract.
+- Docker CLI is installed, but docker version/build cannot access /var/run/docker.sock (permission denied). No system permissions were changed; container validation is prepared in CI, not claimed as locally passing.
+- Initial root-relative workflow/smoke-helper commands were issued from backend and failed path lookup. Moved the helper to root .github/scripts, removed the accidental directories, and reran syntax/simulated checks from the correct root.
+- Live hosting needs the user's Render account, connected GitHub service, private runtime secret and usage limits. These account changes were not executed; exact setup is documented in deployment.md.
+
+## Workflow filename follow-up — 2026-10-27
+
+No functional workflow defect was found: ci.yml was valid. Applied the requested descriptive rename to foodlens-ci.yml and updated documentation links.

@@ -9,7 +9,7 @@ Fill in the trainer's Excel sheet with actual links. Do not use placeholder link
 | Architecture docs | `docs/architecture.md` URL | Draft in scaffold |
 | Prompt history | `docs/prompt-history.md` URL | Template ready; actual usage pending |
 | Context management | `docs/context-management.md` URL | Draft |
-| Presentation | Real PPT/PDF/Slides share URL | Not created |
+| Presentation | Real PPT/PDF/Slides share URL | Generated PowerPoint / Google Slides deck at `docs/FoodLens-AI-Presentation.pptx` (upload to Google Slides) |
 | Demo | Live URL or recording share URL | Not available |
 | Latest commit | GitHub commit URL/SHA | Pending |
 | Test evidence | CI URL or sanitized test output | Not run |

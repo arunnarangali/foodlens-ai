@@ -45,7 +45,7 @@ go run ./cmd/server
 
 Alternatively, privately export `OLLAMA_API_KEY` in the backend terminal; an exported value takes precedence over the file. The loader supports plain or quoted literal values and comments, performs no shell expansion, and rejects other settings without printing their values.
 
-All other settings are fixed in Go: server `127.0.0.1:8080`, cloud API `https://ollama.com/api`, default vision model `gemma4:31b`, and inference timeout 120 seconds. Old address/model/timeout environment variables are ignored; remove them from private files. Before each analysis, the backend checks the hosted listing for the default model's vision and completion capabilities. If it is unavailable, inference stops safely without switching models. No additional setup variables are needed.
+All other application settings are fixed in Go: server `127.0.0.1:8080`, cloud API `https://ollama.com/api`, default vision model `gemma4:31b`, and inference timeout 120 seconds. Old address/model/timeout environment variables are ignored; remove them from private files. Before each analysis, the backend checks the hosted listing for the default model's vision and completion capabilities. If it is unavailable, inference stops safely without switching models. No additional application setup variables are needed. A hosting platform may supply PORT automatically; the server validates it and binds publicly only when it is supplied. Keep it out of the key-only .env.
 
 Model discovery does **not** detect free eligibility or account balance. Your Ollama account controls whether requests are covered by an allowance or billed. FoodLens makes no automatic model fallback or retry after quota/payment failures. No live account access or free inference has been verified here.
 
@@ -88,7 +88,7 @@ npm test
 npm run build
 ```
 
-The lint script checks TypeScript; ESLint is not configured. Tests use synthetic fixtures and mock cloud transport, not real credentials. `npm run preview` inspects the static build and does not proxy the API. Production hosting must serve the build and route `/api` to Go on the same origin; deployment is deferred.
+The lint script checks TypeScript; ESLint is not configured. Tests use synthetic fixtures and mock cloud transport, not real credentials. `npm run preview` inspects the static build and does not proxy the API. The root Dockerfile now builds and serves both frontend and Go API on the same origin. Follow the [Render deployment guide](docs/deployment.md) for GitHub Actions checks and one hosted web service. Actual Docker/CI/Render execution remains unverified locally because Docker daemon access is denied.
 
 ## Privacy and limitations
 
@@ -113,3 +113,7 @@ Restart Go after code updates. Valid JSON enclosed in one Markdown fence is now 
 Choose **Take a photo**, allow browser camera access, wait for the live preview, then choose **Capture photo**. You can cancel the camera or remove the captured image. Capture creates an in-memory JPEG (maximum long edge 1600 pixels) and applies the same 5 MiB validation as file selection. Nothing is sent to Go/Ollama until you choose **Analyze photo**.
 
 Live camera access needs a supported browser, permission and HTTPS or localhost. Unsupported browsers, denied access and missing devices show errors while retaining the existing file picker. Camera tracks stop on cancel, capture, analysis or unmount; late permission responses are stopped after cancellation. Real hardware/mobile behaviour has not been manually verified in this environment.
+
+## One-service hosting
+
+GitHub stores the monorepo and runs `.github/workflows/foodlens-ci.yml`; Render runs one Docker Web Service serving the frontend and Go API together. No GitHub Pages deployment, separate frontend API URL or CORS setup is required. Put the real OLLAMA_API_KEY only in Render's runtime environment. CI uses a synthetic key for static/health checks and never calls the AI provider. See [deployment setup and verification](docs/deployment.md).

@@ -29,3 +29,7 @@ uploads/
 *.jpeg
 *.png
 *.webp
+
+# Deployment smoke-script Python cache
+__pycache__/
+*.pyc

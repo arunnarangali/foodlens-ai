@@ -23,6 +23,7 @@ func envFile(t *testing.T, content string) string {
 	return path
 }
 func TestEnvFileLoadsPrivateKeyWithDefaults(t *testing.T) {
+	t.Setenv("PORT", "")
 	unset(t, "OLLAMA_API_KEY")
 	if err := LoadEnvFile(envFile(t, "# private test fixture\nOLLAMA_API_KEY=unit-test-key\n")); err != nil {
 		t.Fatal(err)

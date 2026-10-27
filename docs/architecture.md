@@ -44,3 +44,9 @@ For each analysis, a bounded authenticated GET /api/tags runs inside the same 12
 ## Browser camera capture
 
 A small CameraCapture component uses getUserMedia with video only and a preferred rear-facing camera. Capture draws a scaled frame to an in-memory canvas, encodes JPEG and passes a File through ImageUploader's existing type/size validation and object-URL preview. The existing multipart API and analysis submission are unchanged. Camera streams are stopped on capture/cancel/unmount or analysis; stale permission/capture callbacks cannot revive a cancelled session. Permission/support errors retain the file-picker alternative. No photo is automatically uploaded or persisted.
+
+## Single-service deployment
+
+The root multi-stage Docker build compiles frontend/dist and Go separately, then copies only the executable and built files into a non-root Alpine runtime with CA certificates. The working directory `/app/backend` resolves the fixed `../frontend/dist` path. The web handler mounts API paths before static handling, forbids dot/traversal paths and directories, and serves existing frontend files only. Local Vite proxy and same-origin API calls remain unchanged.
+
+Platform PORT is validated separately from key-only application configuration; it enables 0.0.0.0 binding on Render. No PORT means loopback-only local default. CI performs frontend checks/build, Go format/tests/vet and Docker smoke checks with a synthetic key; Render is configured to deploy main after CI checks pass. CI needs no provider/deploy secret. See deployment.md for actual readiness limits and manual account setup. Docker execution, GitHub CI execution, Render account/service creation and live HTTPS/provider checks are not verified in this environment.

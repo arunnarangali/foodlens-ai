@@ -65,3 +65,20 @@ Added live camera capture with permission/error states, JPEG preview through exi
 ## Prompt and feature history consolidation — 2026-10-27
 
 Consolidated docs/prompt-history.md into 14 chronological request/feature entries, a feature summary, two runtime prompt versions and a labelled historical-template appendix. Added a README link. This is documentation-only; application features and test claims were not changed or reverified. Existing user staging, file relocations and deletions were preserved.
+
+## Google Slides presentation deck preparation — 2026-10-27
+
+- Analyzed full codebase, architecture, test suites, and documentation.
+- Created `docs/presentation-deck.md`: a complete slide-by-slide Google Slides presentation blueprint with 7 structured slides (Cover + 6 core content slides), visual wireframes, 16:9 widescreen layout guidelines, color scheme, content cards, and verbatim speaker notes under 3 minutes.
+- Generated native presentation file `docs/FoodLens-AI-Presentation.pptx` ready for direct upload/import into Google Slides.
+- Created `docs/screenshots/` catalog and `docs/screenshots/README.md` defining the 6 required screenshots (`foodlens-landing-clean.png`, `foodlens-image-preview.png`, `foodlens-analysis-result.png`, `foodlens-unclear-or-error.png`, `backend-go-terminal.png`, `frontend-test-terminal.png`) with reproduction steps.
+- Verified all backend and frontend tests continue to pass (Go test suites 100% pass, Vitest 25/25 pass).
+
+
+## Single-service deployment — 2026-10-27
+
+Prepared Go static hosting, Render PORT handling, a multi-stage non-root Docker runtime, read-only GitHub Actions checks and a no-inference container smoke script. Local Go checks/build and frontend TypeScript/25 tests/build pass. Workflow/Python syntax and built-asset simulated checks pass. Docker build is blocked by daemon permissions; GitHub Actions and Render deployment have not run. No key exposed, account changed or live inference performed. Follow deployment.md to finish hosting and record actual evidence.
+
+## Workflow filename follow-up — 2026-10-27
+
+Renamed the workflow to .github/workflows/foodlens-ci.yml. Contents are unchanged; deployment instructions and links now use the new path.

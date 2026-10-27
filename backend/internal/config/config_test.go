@@ -7,6 +7,7 @@ import (
 
 func TestKeyOnlyConfiguration(t *testing.T) {
 	t.Setenv("OLLAMA_API_KEY", "unit-test-key")
+	t.Setenv("PORT", "")
 	// Old exported settings must not alter the fixed cloud destination or defaults.
 	for _, key := range []string{"SERVER_ADDR", "OLLAMA_BASE_URL", "OLLAMA_MODEL", "OLLAMA_ALLOWED_MODELS", "OLLAMA_TIMEOUT_SECONDS"} {
 		t.Setenv(key, "obsolete-invalid-value")
@@ -35,6 +36,31 @@ func TestInvalidKeysAreRedacted(t *testing.T) {
 			}
 			if strings.Contains(err.Error(), "private-test") {
 				t.Fatal("key leaked")
+			}
+		})
+	}
+}
+
+func TestPlatformPort(t *testing.T) {
+	t.Setenv("OLLAMA_API_KEY", "unit-test-key")
+	for _, tc := range []struct {
+		value, address string
+		valid          bool
+	}{
+		{"", "127.0.0.1:8080", true}, {"10000", "0.0.0.0:10000", true}, {"8080", "0.0.0.0:8080", true},
+		{"0", "", false}, {"-1", "", false}, {"65536", "", false}, {"secret-invalid-port", "", false}, {" 8080", "", false},
+	} {
+		t.Run(tc.value, func(t *testing.T) {
+			t.Setenv("PORT", tc.value)
+			cfg, err := Load()
+			if (err == nil) != tc.valid {
+				t.Fatalf("unexpected port error: %v", err)
+			}
+			if err == nil && cfg.Address != tc.address {
+				t.Fatal("incorrect bind address")
+			}
+			if err != nil && strings.Contains(err.Error(), "secret-invalid-port") {
+				t.Fatal("raw invalid port logged")
 			}
 		})
 	}

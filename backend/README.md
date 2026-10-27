@@ -9,3 +9,7 @@ Fixed Go defaults: `127.0.0.1:8080`, `https://ollama.com/api`, model `gemma4:31b
 Checks: `gofmt -w .`, `go test ./...`, `go vet ./...`. Tests use synthetic credentials and fake transports, never real keys or credits. See root README and API contract for privacy, limits and setup.
 
 From this directory, use `make run`, `make build`, `make test`, `make vet`, `make fmt`, `make check` (tests + vet), or `make clean`. Plain `make` lists the targets. Override the toolchain when needed with `make GO=/path/to/go check`. The build creates the Git-ignored `server` binary; `make clean` removes it. Run and build use the existing key-only configuration.
+
+## Hosted/static frontend
+
+The server also serves `../frontend/dist` when built, while `/api/*` retains the JSON API. Build the frontend first to inspect it through Go; Vite development remains unchanged. Production uses the root Dockerfile with assets at `/app/frontend/dist` and the binary working directory `/app/backend`. Render's automatically supplied PORT changes the bind address to 0.0.0.0:PORT; local default remains 127.0.0.1:8080. PORT is infrastructure metadata, not a new private .env setting. See `../docs/deployment.md` for CI and account setup; the container has not run successfully in this restricted environment.

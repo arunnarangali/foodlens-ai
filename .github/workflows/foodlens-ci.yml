@@ -1,0 +1,77 @@
+name: FoodLens CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foodlens-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Test and validate deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Check, test and build frontend
+        working-directory: frontend
+        run: |
+          npm run lint
+          npm test
+          npm run build
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+          cache: false
+      - name: Check Go formatting
+        working-directory: backend
+        run: |
+          unformatted="$(gofmt -l .)"
+          if [ -n "$unformatted" ]; then
+            printf '%s\n' "$unformatted"
+            exit 1
+          fi
+      - name: Test and vet backend
+        working-directory: backend
+        run: |
+          go test ./...
+          go vet ./...
+      - name: Build production container
+        run: docker build --tag foodlens-ci .
+      - name: Start container with synthetic credential
+        run: |
+          docker run --detach --name foodlens-ci \
+            --publish 127.0.0.1:18080:10000 \
+            --env OLLAMA_API_KEY=ci-placeholder-not-a-real-key \
+            foodlens-ci
+      - name: Verify non-root runtime and excluded source/secrets
+        run: |
+          docker exec foodlens-ci sh -c '
+            test "$(id -u)" != 0 &&
+            test ! -e /app/backend/.env &&
+            test ! -d /app/.git &&
+            test ! -d /app/backend/internal
+          '
+      - name: Smoke test frontend and API without inference
+        run: python3 .github/scripts/smoke.py http://127.0.0.1:18080
+      - name: Container diagnostics
+        if: failure()
+        run: docker logs foodlens-ci || true
+      - name: Clean up container
+        if: always()
+        run: docker rm --force foodlens-ci || true

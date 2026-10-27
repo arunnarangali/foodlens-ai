@@ -80,3 +80,9 @@ Only OLLAMA_API_KEY is configurable, through private backend/.env or an exported
 The parser accepts surrounding whitespace, an optional UTF-8 BOM, or a single complete plain/json Markdown code fence around the entire food object. It does not extract arbitrary JSON from prose, repair malformed JSON, invent missing values or relax nutrition validation. Public error shape and status remain unchanged.
 
 For AI_INVALID_RESPONSE the backend logs controlled rejection metadata: model ID, reason, approved field name where available and response byte count. Reasons distinguish invalid envelope, incomplete response, token truncation, empty content, invalid JSON, missing fields, invalid types/values/ranges and output limits. Raw model content, decoder errors, images and credentials are excluded. This is backend troubleshooting information, not a new frontend API field.
+
+## Single-service static hosting
+
+Go now serves the built frontend at GET/HEAD / and existing asset paths, using only the frontend build directory. Missing assets, directories and hidden/private paths return 404; unsupported static methods return 405. Static responses use their appropriate content type and no-cache; they do not use the JSON error contract. All /api paths, including unknown ones and methods, continue through the existing JSON API handler. API response fields and frontend types are unchanged.
+
+PORT is optional platform-provided infrastructure metadata: valid ports 1–65535 bind 0.0.0.0; without it the local address stays 127.0.0.1:8080. The private .env remains key-only. Process health does not assert frontend asset availability or provider access; container smoke checks verify assets separately.

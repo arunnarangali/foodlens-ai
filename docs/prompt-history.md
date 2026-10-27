@@ -19,6 +19,7 @@ Coding assistant: Codex; exact coding-model identifier not recorded. Native web 
 | Backend development Makefile | Checks/build/cleanup verified; run/fmt dry-run only | H-011 |
 | Camera capture and stream cleanup | Implemented; 25 frontend tests last recorded after camera work | H-012 |
 | Ignore rules and marker cleanup | Implemented; 11 marker files removed | H-003, H-013 |
+| Single-service deployment and CI | Source/config prepared; Docker/CI/Render execution unverified | H-015 |
 | Gemini and local Ollama inference | Historical attempts/proposals only; inactive | H-004, H-005 |
 
 No user accounts, database, image/result persistence, result history, RAG, model downloads or deployment were delivered in these milestones. The feature summary reflects inspected source and recorded work, not a claim of a successful live demo.
@@ -213,6 +214,20 @@ No user accounts, database, image/result persistence, result history, RAG, model
 - Added a README link and documentation work records. Preserved unrelated user edits, staged changes, file relocations and deletions.
 - **Verification:** documentation checks only; exact results are recorded in [testing.md](testing.md#prompt-and-feature-history-consolidation--2026-10-27). No new application test run or feature implementation is claimed.
 
+### H-015 — Single-service deployment and GitHub Actions
+
+**Date:** 2026-10-27
+
+> beacuse it has backe end and front end in sme repo so how id with git huba ction
+
+**Status:** deployment code/configuration prepared; live container, CI and Render deployment unverified.
+
+- Inspected .github and existing Vite/Go setup. Explained static Pages versus an executable backend. User selected **One hosted app** on Render, then said “proceed with above plan”.
+- Added Go static-file routing, unchanged JSON API paths, validated infrastructure PORT, root multi-stage Docker build, context exclusions, a read-only GitHub Actions workflow and credential-free container smoke checks. Existing private setup remains key-only.
+- Kept local development and same-origin frontend API calls; no separate frontend host, CORS, user auth, model change or provider call added.
+- Local Go tests/vet/build and frontend TypeScript/25 tests/build pass. Workflow/Python syntax and an asset-aware simulated smoke check pass. Docker CLI cannot access the daemon, so a Docker build/container run is not claimed. No Render account/service or live URL was configured.
+- **Evidence:** [deployment instructions](deployment.md), [actual verification](testing.md#single-service-deployment--2026-10-27), [workflow](../.github/workflows/foodlens-ci.yml).
+
 ## Runtime food-analysis prompt versions
 
 Runtime prompts are model instructions, distinct from the development requests above. Current source: [backend/internal/ai/prompt.go](../backend/internal/ai/prompt.go). Both versions use the user message `Analyze this food photo. Return only the required JSON object.` and supply base64 image data separately. The backend owns the final disclaimer. All templates describe shapes; they are not observed food output.
@@ -278,3 +293,7 @@ The five scaffold templates below were prepared before implementation. They are 
 ## Maintaining this history
 
 Add the next unused H-ID in chronological order. Record the user's request excerpt, accepted decisions, actual outcome/status and evidence. Preserve superseded decisions as history rather than silently rewriting them as current work. For runtime prompt changes, add a version and identify which source version is active. Link exact test commands/results to testing.md; do not manufacture live evidence, commit authorship, model identity, timestamps or account access.
+
+## Workflow filename follow-up — 2026-10-27
+
+User requested renaming the workflow. Renamed ci.yml to foodlens-ci.yml for a descriptive filename; the old name was already valid. Updated active references without changing workflow behaviour.

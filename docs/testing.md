@@ -148,3 +148,31 @@ From frontend: `npm run lint && npm test && npm run build` — final exit 0; Typ
 Documentation-only validation: `python3 /tmp/foodlens-history-check.py` checked 14 unique sequential history IDs, five historical scaffold templates, exact agreement of the current V2 prompt with the Go constant, balanced code fences, local file/heading links and the README history link. `git diff --check` checked whitespace. No application tests were rerun for this documentation-only change; prior results retain their historical scope. The checker is a temporary session script, not a new application dependency or repository test suite.
 
 Result: both documentation checks returned exit 0; the checker verified 27 local file/heading links. No missing links, duplicate task IDs, prompt mismatch or whitespace errors were found.
+
+## Single-service deployment — 2026-10-27
+
+Actual commands and outcomes:
+
+| Directory | Command/check | Actual result |
+|---|---|---|
+| Root | `/usr/lib/go-1.26/bin/gofmt -w backend` | Exit 0. |
+| backend | `GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go test ./... && GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go vet ./...` | Exit 0; ai/api/config/food/web passed, vet no diagnostics. Server/validation have no separate test files. |
+| backend | `GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go build -o /tmp/foodlens-deploy-server ./cmd/server` | Exit 0; binary compiled. |
+| frontend | `npm run lint && npm test && npm run build` | Exit 0; TypeScript, 25 tests in two files, 31-module Vite production build passed. |
+| Root | Python AST parse of `.github/scripts/smoke.py`; PyYAML BaseLoader parse/assertions of `.github/workflows/foodlens-ci.yml` (current path; the original check preceded the rename) | Exit 0; syntax/triggers/main/read-only permissions verified. This is not actionlint or an actual Actions run. |
+| Root | Python smoke-harness import with actual frontend/dist assets and simulated API fetch responses | Exit 0; smoke assertions passed. No network, live server, container or inference call was made by this harness. |
+| Root | `docker version` | Exit 1; Docker CLI installed, daemon socket access denied. |
+| Root | `docker build --tag foodlens-ci .` | Exit 1; permission denied accessing /var/run/docker.sock. Container build/run, non-root runtime and image-file checks remain unverified. |
+| Root | `git diff --check` | Exit 0 before documentation completion; rerun after final edits. |
+
+New Go tests cover homepage/assets, content types, HEAD, disallowed static methods, missing build/files, directory/hidden/traversal rejection, health and unknown API JSON, invalid upload routing without inference, local binding and valid/invalid platform PORT. No provider key is required by tests. Docker CI is written to build, start with a synthetic key, check non-root/file exclusions and run the smoke helper without inference.
+
+Two initial helper commands used root-relative paths from backend and failed; paths were corrected and helpers rerun from root. Successful checks are listed separately from those setup failures. No actionlint executable was available. No Render account/service, runtime secret, live HTTPS URL, camera hardware or live-provider request was configured or verified. See deployment.md for exact remaining account and local Docker steps.
+
+Final deployment-documentation checks: workflow YAML, each CI shell step (`bash -n`), Python syntax, required Docker exclusion/non-root/no-build-secret declarations, 15 sequential history IDs and local file targets passed. A tracked-private-env/frontend-key-reference scan passed. These static declaration checks are not Docker runtime or GitHub Actions execution. Final `git diff --check` returned exit 0.
+
+## Workflow filename follow-up — 2026-10-27
+
+Workflow rename only: verified the new file exists, old path is absent, contents are byte-for-byte identical to the pre-rename file, and YAML parses successfully. The deployment record now identifies the current workflow path and notes that its original check preceded the rename. No application tests rerun for the filename-only change.
+
+Related-reference audit: active README, deployment instructions, prompt-history link and testing references use .github/workflows/foodlens-ci.yml. Verified referenced workflow paths exist and no obsolete workflow-path reference remains. Historical rename descriptions retain the old filename as narrative only.

@@ -38,3 +38,7 @@ This session implements the skeleton and upload validation only. API paths are `
 ## Milestone 2 — hosted-only update
 
 Use Ollama Cloud with a backend Bearer key and publicly listed vision model. No local inference or model downloads. Finish mock-tested analysis, copy and safe errors even when account access is unavailable; clearly separate that work from a live smoke test. Cloud format enforcement is currently unsupported: prompt JSON and strictly validate. No history, SDK, database or unrelated features.
+
+## Explicit hosting follow-up — 2026-10-27
+
+The user subsequently authorized a single hosted frontend/API service with GitHub Actions. Deployment preparation is now an explicit follow-up to the original one-day scope guard. See deployment.md; actual container/CI/Render deployment remains unverified, rather than being counted as completed day-one evidence.
