@@ -1,6 +1,8 @@
 import React from "react";
 import AnalysisResults from "./AnalysisResults";
 import ImageUploader from "./ImageUploader";
+import AiPlateScanner from "./AiPlateScanner";
+import AiSparkleIcon from "./AiSparkleIcon";
 import type { AnalysisResponse } from "../types/api";
 
 interface AnalyzerWorkspaceProps {
@@ -56,47 +58,70 @@ export default function AnalyzerWorkspace({
           <p className="eyebrow">Interactive Estimation</p>
           <h1>Analyze your plate.</h1>
           <p className="subtitle">
-            Upload or capture a food photo to explore likely ingredients, rough nutrition ranges, and simple preparation ideas.
+            Upload or capture a food photo to explore likely ingredients, rough
+            nutrition ranges, and simple preparation ideas.
           </p>
         </section>
 
         <div className="workspace" id="analyzer">
-          <section className="card" aria-label="Upload a food image">
+          <section
+            className="card upload-card"
+            aria-label="Upload a food image"
+          >
             <div className="card-heading">
               <span className="step">01</span>
               <h2>Your food photo</h2>
             </div>
-            <form onSubmit={onSubmit}>
-              <ImageUploader
-                file={file}
-                disabled={busy}
-                onError={showError}
-                onChange={onFileChange}
-              />
-              {error && (
-                <p role="alert" className="error">
-                  {error}
+            <form onSubmit={onSubmit} className="upload-form">
+              <div className="upload-scroll-body">
+                <ImageUploader
+                  file={file}
+                  disabled={busy}
+                  onError={showError}
+                  onChange={onFileChange}
+                />
+                {error && (
+                  <p role="alert" className="error">
+                    {error}
+                  </p>
+                )}
+              </div>
+              <div className="upload-card-footer">
+                <button
+                  className={`primary ${busy ? "is-analyzing" : ""}`}
+                  disabled={!file || busy}
+                  type="submit"
+                >
+                  {busy ? (
+                    <span className="btn-ai-analyzing">
+                      <span
+                        className="btn-ai-sparkle-loader"
+                        aria-hidden="true"
+                      >
+                        <AiSparkleIcon />
+                      </span>
+                      <span>Analyzing photo…</span>
+                      <span className="btn-pulse-dot" aria-hidden="true" />
+                    </span>
+                  ) : (
+                    <>
+                      <span>Analyze photo</span>
+                      <span aria-hidden="true"> →</span>
+                    </>
+                  )}
+                </button>
+                <p className="small privacy">
+                  Submitting sends your photo to Ollama Cloud for analysis. This
+                  app does not save photos. Provider terms and retention
+                  policies apply. Cloud usage limits and charges may apply.
+                  Avoid sensitive or personal photos.
                 </p>
-              )}
-              <button
-                className="primary"
-                disabled={!file || busy}
-                type="submit"
-              >
-                {busy ? "Analyzing photo…" : "Analyze photo"}
-                <span aria-hidden="true"> →</span>
-              </button>
-              <p className="small privacy">
-                Submitting sends your photo to Ollama Cloud for analysis. This
-                app does not save photos. Provider terms and retention policies
-                apply. Cloud usage limits and charges may apply. Avoid sensitive
-                or personal photos.
-              </p>
+              </div>
             </form>
           </section>
 
           <section
-            className="card results"
+            className={`card results ${result ? "has-analysis" : ""}`}
             aria-live="polite"
             aria-busy={busy}
           >
@@ -107,28 +132,48 @@ export default function AnalyzerWorkspace({
             {result ? (
               <AnalysisResults result={result} />
             ) : (
-              <>
-                <div className="plate" aria-hidden="true">
-                  ◯
-                </div>
-                <h3>
-                  {busy
-                    ? "Analyzing your photo — this may take a few minutes…"
-                    : "A fresh perspective starts here"}
-                </h3>
-                <p>
-                  Choose a photo to explore likely ingredients, approximate
-                  nutrition ranges and a basic preparation idea.
-                </p>
-                <div className="coming">
-                  <span>Likely ingredients</span>
-                  <span>Nutrition ranges</span>
-                  <span>Preparation idea</span>
-                </div>
-                <p className="small">
-                  AI estimates can be wrong. Verify ingredients independently.
-                </p>
-              </>
+              <div
+                className={`results-placeholder ${busy ? "is-analyzing" : ""}`}
+              >
+                <AiPlateScanner busy={busy} />
+                {busy ? (
+                  <div className="ai-analyzing-content">
+                    <h3>Analyzing your food photo with AI…</h3>
+                    <p className="subtitle small">
+                      Identifying visible ingredients, estimating portions, and
+                      computing nutritional ranges.
+                    </p>
+                    <div className="ai-skeleton-preview" aria-hidden="true">
+                      <div className="skeleton-tags">
+                        <span className="skeleton-tag" />
+                        <span className="skeleton-tag" />
+                        <span className="skeleton-tag" />
+                      </div>
+                      <div className="skeleton-grid">
+                        <div className="skeleton-card" />
+                        <div className="skeleton-card" />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h3>A fresh perspective starts here</h3>
+                    <p>
+                      Choose a photo to explore likely ingredients, approximate
+                      nutrition ranges and a basic preparation idea.
+                    </p>
+                    <div className="coming">
+                      <span>Likely ingredients</span>
+                      <span>Nutrition ranges</span>
+                      <span>Preparation idea</span>
+                    </div>
+                    <p className="small">
+                      AI estimates can be wrong. Verify ingredients
+                      independently.
+                    </p>
+                  </>
+                )}
+              </div>
             )}
           </section>
         </div>
@@ -145,11 +190,7 @@ export default function AnalyzerWorkspace({
           <strong>FoodLens AI</strong>{" "}
           <span>One photo. A little more understanding.</span>
         </div>
-        <button
-          type="button"
-          className="text-link"
-          onClick={onNavigateToHome}
-        >
+        <button type="button" className="text-link" onClick={onNavigateToHome}>
           ← Return to Overview
         </button>
       </footer>

@@ -51,3 +51,11 @@ The user selected one Render Docker Web Service instead of GitHub Pages plus a s
 ## Current simplified deployment handoff — 2026-10-27
 
 The user requested removing the GitHub workflow and Docker to avoid unnecessary complexity. Those files and the CI-only smoke helper were deleted. Active hosting uses Render's native Go runtime, a root command to build React and Go, and `cd backend && ./server` to start. Retain Go static routing, platform PORT, key-only setup, Makefile and application tests. No real service/account or deployment was changed. See deployment.md and the latest testing record; earlier Docker/CI evidence remains historical.
+
+## Historical sample handoff before analyzer simplification — 2026-10-27
+
+The sample now has a local goal selector with automatic illustrative profiles; Maintain weight defaults. All reference markers change immediately on fixed scales without modifying meal ranges/midpoints. Analyzer goals remain independent with user-entered per-meal targets. See README for presets, architecture for state/scale behaviour and testing for actual 56-test frontend verification. No new model call, prompt or API change. No compaction action was performed during this feature implementation; this entry is a handoff only.
+
+## Current compact goal-selector handoff — 2026-10-27
+
+The earlier manual-entry analyzer form is superseded. Analyzer context now holds one selected goal; shared illustrative presets/maxima live in goalPresets.ts. Changes immediately update goal reference lines/text without modifying nutrition estimates or making requests. Selection persists across routes/results until refresh; sample selection/tabs remain independent. The old draft/apply design above is historical. Final frontend TypeScript/56 tests/build passed; no backend change, live inference, browser inspection or compaction action performed in this follow-up.

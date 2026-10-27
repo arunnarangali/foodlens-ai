@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { NutritionGoalsProvider } from "./components/NutritionGoals";
 import AnalyzerWorkspace from "./components/AnalyzerWorkspace";
 import LandingPage from "./components/LandingPage";
 import { analyzeImage } from "./services/api";
@@ -26,7 +27,7 @@ interface AppProps {
   initialRoute?: Route;
 }
 
-export default function App({ initialRoute }: AppProps = {}) {
+function AppContent({ initialRoute }: AppProps = {}) {
   const [route, setRoute] = useState<Route>(initialRoute || getRouteFromHash());
   const inFlight = useRef(false);
   const [file, setFile] = useState<File | null>(null);
@@ -115,4 +116,12 @@ export default function App({ initialRoute }: AppProps = {}) {
   }
 
   return <LandingPage onNavigateToAnalyzer={navigateToAnalyzer} />;
+}
+
+export default function App(props: AppProps = {}) {
+  return (
+    <NutritionGoalsProvider>
+      <AppContent {...props} />
+    </NutritionGoalsProvider>
+  );
 }

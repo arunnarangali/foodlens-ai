@@ -2,7 +2,7 @@
 
 ## Current data flow
 
-Browser → Go upload validation → authenticated Ollama Cloud → validated result → browser. Submitting transmits food photos externally. This app writes no image to disk, logs no image/base64/request body and stores no result/image in localStorage or browser history. In-memory preview URLs are revoked. Copy contains generated text, assumptions and disclaimer only.
+Browser → Go upload validation → authenticated Ollama Cloud → validated result → browser. Submitting transmits food photos externally. This app writes no image to disk, logs no image/base64/request body and stores no result/image in localStorage or browser history. In-memory preview URLs are revoked. Copy contains result text, selected goal/illustrative references where relevant, assumptions and disclaimer.
 
 Avoid sensitive/identifiable photos. Provider processing/retention terms apply; this educational MVP makes no regulated-workload or allergen guarantee. Read https://docs.ollama.com/cloud and the linked privacy policy before using real photos.
 
@@ -30,3 +30,7 @@ Automated tests cover auth/header formation with synthetic keys, redirect reject
 Render runs the Go service natively and receives OLLAMA_API_KEY privately in its runtime settings. Do not commit/upload a private .env or expose credentials in the React build or logs. No Docker image, build argument or GitHub Actions deployment secret is used. Platform PORT is supplied automatically and is not added to .env.
 
 The static handler exposes only frontend/dist and never lists directories or serves hidden files. Frontend/API share an HTTPS origin, so no broad CORS change is required. Public visitors can consume the service's Ollama allowance; this MVP adds no user authentication or abuse controls. Check account budgets/limits and restrict the audience before broad sharing. Test locally before each manual deploy; no CI gate remains. Native hosting and live inference remain unverified here.
+
+## Independent sample goals — 2026-10-27
+
+The landing sample stores its selected demonstration profile only in component memory and resets when unmounted. Changing it sends nothing to Go/Ollama and never changes the analyzer's independent selected goal. Both selectors use shared illustrative references entirely in the frontend. Presets are labelled application examples, not personalised guidance or weight-change guarantees. Automated tests cover state isolation and absence of fetch calls; no live security/browser certification is claimed. Copy of analyzed results includes the selected goal, illustrative references, comparisons, assumptions and disclaimer.

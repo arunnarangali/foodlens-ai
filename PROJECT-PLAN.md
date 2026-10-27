@@ -54,3 +54,7 @@ The detailed `docs/session-requirements.md` maps all numbered requirements to a 
 - No provider key in client code and no image data in history/logs.
 - Core tests are actually executed and documented.
 - All submission artifacts are linked after being created.
+
+## Authorized goal-comparison follow-ups — 2026-10-27
+
+The analyzer has a compact Weight loss/Maintain weight/Weight gain selector using shared illustrative per-meal references, with no manual-entry form. The landing sample independently offers automatic demo presets with fixed scales and unchanged meal estimates. Values and non-medical limitations are in README; these are application examples rather than researched prescriptions. Tests and actual verification are in docs/testing.md. No personal diet calculation, API change or new storage was added.

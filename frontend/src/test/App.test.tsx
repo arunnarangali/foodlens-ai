@@ -93,7 +93,7 @@ it('sends multipart data and renders analysis ranges and unknown nutrients', asy
 it('renders unclear photos without nutrition or preparation advice', async () => {
  vi.stubGlobal('fetch',vi.fn().mockResolvedValue({ok:true,json:async()=>({status:'notFoodOrUnclear',dishName:'No clear food visible',identificationConfidence:'low',visibleIngredients:[],nutritionEstimate:null,preparationIdea:[],uncertainties:['Please choose a clearer food photo.'],disclaimer:result.disclaimer})}));
  render(<App/>);submitPhoto();await screen.findByText('Please choose a clearer food photo.');
- expect(screen.queryByText('Approximate nutrition')).toBeNull();expect(screen.queryByText('Simple preparation idea')).toBeNull();
+ expect(screen.queryByText('Approximate nutrition')).toBeNull();expect(screen.queryByText(/Illustrative per-meal comparison/)).toBeNull();expect(screen.queryByText('Simple preparation idea')).toBeNull();
 });
 it('keeps the upload disabled while analysis is pending', async () => {
  let complete!: (response:unknown)=>void;
@@ -157,7 +157,7 @@ it('copies ranges, assumptions, uncertainties and disclaimer', async () => {
  fireEvent.click(screen.getByRole('button',{name:'Copy results'}));
  await screen.findByText('Results copied.');
  const copied = writeText.mock.calls[0][0];
- for (const required of ['200–500 kcal','One medium bowl','Unknown',result.uncertainties[0],result.disclaimer]) expect(copied).toContain(required);
+ for (const required of ['200–500 kcal','One medium bowl','Unknown','approximate midpoint: 350 kcal','below goal reference','illustrative per-meal goal reference: 600 kcal','Selected goal: Maintain weight','not personalised dietary advice',result.uncertainties[0],result.disclaimer]) expect(copied).toContain(required);
 });
 it('provides selectable text when clipboard access fails', async () => {
  vi.stubGlobal('navigator', {clipboard:{writeText:vi.fn().mockRejectedValue(new Error('denied'))}});
@@ -241,4 +241,18 @@ describe('landing page sections and sample showcase', () => {
     expect(screen.queryByLabelText('Choose a food photo')).toBeNull();
     expect(screen.getByRole('heading', { name: 'How FoodLens AI Works' })).toBeTruthy();
   });
+});
+
+it('keeps the analysis title, confidence, dish and copy action outside the details scroller', async () => {
+ vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ok:true,json:async()=>result}));
+ render(<App/>);submitPhoto();await screen.findByText(result.dishName);
+ const summary=screen.getByRole('heading',{name:result.dishName}).closest('.analysis-summary')!;
+ expect(summary).toBeTruthy();
+ expect(within(summary as HTMLElement).getByRole('button',{name:'Copy results'})).toBeTruthy();
+ expect(within(summary as HTMLElement).getByText('Identification confidence: medium')).toBeTruthy();
+ const details=summary.parentElement!.querySelector('.analysis-scroll-body')!;
+ expect(details).toBeTruthy();
+ expect(within(details as HTMLElement).getByRole('heading',{name:'Approximate nutrition'})).toBeTruthy();
+ expect(details.contains(summary)).toBe(false);
+ expect(screen.getByRole('heading',{name:'Your analysis'}).closest('.analysis-scroll-body')).toBeNull();
 });

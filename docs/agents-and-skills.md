@@ -15,3 +15,7 @@ These are reusable working roles/prompts, not proof that a custom autonomous age
 
 ## Tool integrations / MCP
 No MCP server is needed by this MVP. The required runtime integration is the authenticated Ollama Cloud HTTP API from the Go backend using the standard library. If an MCP server is added for development (for example, a repository or documentation connector), record its exact name, purpose, accessible resources, permissions, and whether it was used in that week's work. Do not add MCP merely to satisfy a checkbox.
+
+## Sample goal follow-up — 2026-10-27
+
+The food-image-analysis skill now distinguishes frontend demonstration/goal references from model estimates. Goal changes preserve food estimates and do not modify the runtime prompt. This work used no sub-agents or MCP integration.

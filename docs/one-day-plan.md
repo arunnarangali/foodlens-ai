@@ -46,3 +46,11 @@ The user subsequently authorized a single hosted frontend/API service with GitHu
 ## Current simplified hosting follow-up — 2026-10-27
 
 The user superseded Docker/CI deployment with one native Render Go service and manual deployment. Use direct npm/Go build commands; no Docker, workflow, deploy hook or extra script is needed. Preserve runtime PORT support and key-only private configuration. Actual hosted verification is still outstanding.
+
+## Explicit interactive sample follow-up — 2026-10-27
+
+User-authorized addition: automatic sample Weight loss/Maintain weight/Weight gain presets, independent from the analyzer (the earlier manual-entry form was superseded by the compact selector below). Acceptance: goal selection moves all demo reference markers on stable scales, retains food estimates and disclaimers, and makes no network requests. Implemented with automated frontend verification (56 tests); manual visual/mobile validation remains outstanding. This is an educational comparison feature, not a personalised diet calculator.
+
+## Compact analyzer selector follow-up — 2026-10-27
+
+The user replaced manual per-meal target entry with a compact goal selector and automatic illustrative references shared with the sample. Acceptance: no number fields or Apply action, immediate four-card reference updates, stable intervals, accurate inclusive comparison labels, copy export and independent sample/analyzer selections. Implemented with 56 passing frontend tests; manual visual/mobile verification remains outstanding. No personalised diet calculation or API expansion added.

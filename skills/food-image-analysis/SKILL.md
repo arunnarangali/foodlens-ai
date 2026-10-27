@@ -39,3 +39,7 @@ Cloud JSON schema enforcement is currently unsupported. Do not claim schema-cons
 ## Output-format reliability
 
 The current runtime prompt includes full analyzed and notFoodOrUnclear JSON templates with nullable nutrients, not illustrative calorie values. Return the food object inside message.content, not an API envelope. Use min/max objects for nutrient ranges. One whole-response Markdown fence may be removed by the backend as formatting only; missing fields, prose outside JSON and invalid ranges still fail. No repair call or invented nutrient default is permitted.
+
+## Comparison goals are presentation only
+
+The landing sample has automatic Weight loss/Maintain weight/Weight gain demonstration presets; the analyzer uses the same presets via a compact goal selector. Presets are application constants, not model output or dietary prescriptions. Preserve estimated ranges, midpoints, assumptions, confidence and uncertainty when reference markers change. Do not adjust model nutrition estimates to fit a goal or promise weight outcomes. Exact presets and limitations are in README; the runtime food prompt is unchanged.

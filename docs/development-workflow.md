@@ -47,3 +47,11 @@ Use `go test ./...`, `go vet ./...`, frontend TypeScript checks, Vitest and prod
 ## Deployment workflow — native runtime
 
 Run frontend TypeScript/tests/build and Go tests/vet locally, then push the reviewed commit. Use one Render native Go Web Service with the repository-root build and backend start commands in deployment.md. Auto-Deploy is Off: deploy manually after checks pass. The workflow file, Docker configuration and automated smoke helper were removed at the user's request. No replacement automation or extra framework is introduced.
+
+## Comparison-goal review — 2026-10-27
+
+Review the shared illustrative goal presets separately from model estimates. Both selectors update references immediately; no manual-entry form remains. Keep intervals/midpoints fixed across sample selections, use explicit comparison text as well as markers, and label all presets as demonstration values. Test reference positions and cross-state isolation without network access. Record research as rationale for cautious presentation, never as endorsement of arbitrary preset numbers. Update all affected UI/demo/skill docs when these boundaries change.
+
+## Colour-theme review — 2026-10-27
+
+Keep status palettes in shared nutrition-card CSS variables and preserve explicit badges. Check text/badge colour pairs against their actual source backgrounds and graph indicators against track/card colours. Source contrast ratios and DOM status tests do not establish rendered browser accessibility; record visual testing separately. The user requested handling browser/mobile checks manually for the full-card theme change.

@@ -80,3 +80,67 @@ No functional workflow defect was found: ci.yml was valid. Applied the requested
 ## Native-runtime deployment simplification — 2026-10-27
 
 The user requested removing the workflow and Docker to simplify hosting. Render native runtime documentation confirms that Node/npm are available alongside Go, so direct build/start commands replace the prior container/CI setup. Removed four deployment-only files and retained Go static routing, platform PORT support, Makefile and tests. Existing hosted-service runtimes are not automatically changed by repository cleanup; deployment.md explains setting up a native service. No native service or live inference was verified.
+
+## Nutrition references without false precision — 2026-10-27
+
+A midpoint alone could label a broad, uncertain estimate as definitely above/below a reference. The UI instead compares the complete interval, includes boundary equality and retains the original range beside an explicitly approximate midpoint. User-selected demo references are labelled illustrative per-meal values, not dietary advice. Shared cards keep the landing sample and live results consistent; narrowed CSS selectors prevent nested indicator styling from inheriting card backgrounds. Baseline checks passed; no existing failure needed repair. Browser layout/hardware and live inference were not exercised for this feature.
+
+## Goal-specific user targets — 2026-10-27
+
+Fixed analyzer references were replaced with user-defined per-meal targets to avoid inventing dietary requirements for weight goals. Goal state lives above routes so navigation and result replacement do not discard entries; drafts and applied values are separate. Blank/zero/negative/non-finite inputs fail locally without replacing applied targets. The landing sample retains its labelled demo values. One new navigation test initially queried the initial upload label after selection; correcting it to accept “Choose another photo” resolved the test failure. Final frontend lint/50 tests/build passed. No model prompt or provider calls were needed; manual visual/mobile checks remain unperformed.
+
+## Goal selection in the pictured sample — 2026-10-27
+
+The user's screenshot showed the landing sample, whereas the existing selector lived only in analyzed results. Added a separate local selector with approved demo profiles. Reusing per-selection scaling would make the food interval shift and obscure what changed; fixed maxima spanning all profiles keep estimate positions stable. Removed “Real Output Example”/“healthy” sample wording to avoid implying live evidence or a health judgement. Baseline checks passed, and no implementation test failures occurred in this follow-up. Manual browser/mobile checks remain unperformed.
+
+## Removing manual goal detail — 2026-10-27
+
+The user wanted immediate reference changes rather than a target form. Centralized sample/analyzer presets, retained only selected-goal state and removed validation/draft UI. Passing preset maxima with each result prevents reference switching from moving food intervals. The first edit script stopped on a stale comment match before completing dependent files; a subsequent TypeScript check reported temporary old imports/state access. Corrected the script and replaced obsolete manual-input tests; final lint/56 tests/build passed. Existing sample tab controls were preserved. No manual browser inspection performed.
+
+## Keyboard-accessible goal styling — 2026-10-27
+
+The requested “tabs” choose a comparison value rather than switch content panels, so the analyzer uses a native radio group with segmented styling rather than ARIA tabs. This provides single selection, Tab entry and arrow-key navigation without bespoke keyboard handlers. Existing sample tabs were preserved. The first keyboard test failed because JSDOM lacks CSS.escape, which user-event needs to find radio siblings; added a scoped test-only escape shim. Final frontend lint/58 tests/build passed. Cards reuse the existing comparison status for borders, keeping text labels and constant 2px widths. No manual browser/mobile appearance validation was performed.
+
+## Sample control parity — 2026-10-27
+
+The sample used older ARIA tab buttons plus a hidden select while the analyzer used native-radio segmented controls. Extracted a controlled GoalTabs component for both and removed the duplicate sample selector, preserving independent state and the visible demo notice/status. The sample already used shared border classes/CSS; source inspection found no sample-specific override, so no separate border fix was invented. A curl attempt to inspect port 5175 failed because opening sockets is prohibited here. Live browser styling/cache state remains undiagnosed; automated lint/58 tests/build passed without implementation test failures in this follow-up.
+
+## Readable full-card themes — 2026-10-27
+
+The earlier card border alone did not provide the requested status emphasis. Replaced fixed green card/text/graph colours with shared status variables, keeping explicit badges and neutral unknown handling. Checked source palettes for readable text and graph contrast; subtle borders are decorative, not the only indicator. Chrome attempts first failed to create a profile, then failed on a restricted socket operation using a temporary profile. The user asked to perform browser checks manually; further browser attempts stopped. No cause for the user's rendered appearance is claimed. Final TypeScript/58 tests/build and contrast checks passed without an application-test failure in this follow-up.
+
+## Explaining nutrition colours — 2026-10-27
+
+Added one shared colour key because card themes alone did not make their meaning obvious. Reused palette variables rather than separately defining swatch colours; explicit text avoids relying on colour recognition. The user subsequently requested no colour names, so the final labels name statuses only. Scoped legend paragraph styles prevent analyzer-wide typography rules from overriding its text. Existing regression cases were strengthened for both views, goal changes, decorative swatches, no colour-name text and non-food omission. All checks passed without a failing test run in this follow-up. Browser/mobile review remains with the user.
+
+## Launch-button icon — 2026-10-27
+
+Used one small inline SVG sparkle component for navbar/hero/banner arrows, with inherited colour and decorative accessibility attributes. No additional dependency or observed implementation failure. Manual browser review remains with the user.
+
+## Keep the analysis header visible — 2026-10-27
+
+The whole results card previously scrolled, including Your analysis/confidence/dish/copy controls. Split the result into a non-scrolling summary and a flex detail scroller, keeping the outer heading outside both. This avoids stacked sticky offsets or covering content. Completed-result cards get a mobile viewport-height cap; the panel itself remains in normal page flow. Both food and unclear outcomes retain copy fallback and disclaimers. Baseline 58 tests and final 59 tests/lint/build passed without test failures. Layout was not browser-verified, per the user's preference.
+
+## Engaging AI loading indicators without breaking accessibility or tests — 2026-10-27
+
+Card 01's analyze button previously used plain text "Analyzing photo…", and Card 02 used a crude unicode circle `◯` during Ollama Cloud analysis.
+1. **Analyze Button**: Upgrading the button to display rich AI animations (gradient shimmer, spinning sparkle SVG, pulsing dot) risked breaking existing tests querying `screen.getByRole('button', { name: /Analyzing photo/ })`. Preserved the exact text inside an accessible span while hiding decorative SVG animations behind `aria-hidden="true"`.
+2. **AI Plate Scanner**: Replaced the unicode `◯` with a dedicated `AiPlateScanner` component rendering a botanical plate SVG in idle state, and an animated AI vision scanner (conic gradient ring, concentric radar pulses, orbiting sparkles, reticle crosshair, sweeping vertical laser, and skeleton preview) when busy.
+3. Added unit tests in `AiPlateScanner.test.tsx` verifying both idle and active states. All 61 Vitest tests and Go backend tests passed with zero regressions.
+
+## Segmented control responsive wrapping and container sizing — 2026-10-27
+
+In both Card 02 "Your goal" and the landing page `#sample-result`, the 3 goal options were wrapping into an awkward 2-on-top, 1-centered-on-bottom layout when available width dropped below 404px.
+1. **Grid Replacement**: Replaced `display: inline-flex; flex-wrap: wrap; width: fit-content;` with an equal 3-column CSS Grid (`grid-template-columns: repeat(3, minmax(0, 1fr))`) and `width: 100%; max-width: 480px`. With compact padding (`8px 6px`), all 3 tabs stay locked on 1 horizontal row with equal 33.3% widths across desktop Card 02 (860px+) and tablets.
+2. **Clean Stacking on Narrow Mobile**: Added `@container goalbox (max-width: 330px)` and `@media (max-width: 420px)` to cleanly stack into a full-width 3-row vertical pill list when width is strictly constrained on mobile devices, avoiding awkward wrapping or cutoffs.
+3. **Workspace Stacking**: Switched `.workspace` to stack at `< 859px` rather than 580px, avoiding squeezed side-by-side cards on tablet displays.
+
+## Mobile results panel cutoff and squished 2-column cards — 2026-10-27
+
+In mobile viewports (< 860px), Card 02's results were being cut off horizontally through Carbohydrates and Fat, completely hiding the rest of the analysis content (sliders, preparation idea, uncertainties, notice).
+1. **Cause**: `.analyzer-main .card.results.has-analysis` was styled with `max-height: 85dvh; overflow: hidden;` on mobile without a definite height. As a result, the flex child `.analysis-scroll-body` did not establish a constrained scroll height, causing the parent card's `overflow: hidden` to simply slice the content in half at 85dvh.
+2. **Solution**: On screens < 860px, removed `max-height: 85dvh; overflow: hidden;` and allowed the card and scroll body to expand naturally (`overflow: visible; max-height: none;`). To keep the dish name and copy button easily accessible while scrolling down, `.analysis-summary` uses `position: sticky; top: 0; z-index: 10; background: #ffffff;`.
+3. **Responsive Cards Grid**: Updated `.nutrition-grid` to `repeat(auto-fit, minmax(210px, 1fr))` with `@media (max-width: 480px) { grid-template-columns: 1fr; }`. On smartphones, cards display in a spacious single column where sliders, badges, and midpoint/reference dots never cram.
+
+
+

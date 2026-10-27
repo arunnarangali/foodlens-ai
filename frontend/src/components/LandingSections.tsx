@@ -1,10 +1,16 @@
+import { useState } from "react";
+import { SAMPLE_NUTRITION } from "../utils/sampleGoals";
+import {
+  GOAL_PRESETS,
+  GOAL_SCALE_MAXIMA,
+  SAMPLE_GOAL_NOTICE,
+  type NutritionGoal,
+} from "../utils/goalPresets";
+import GoalTabs from "./GoalTabs";
+import NutritionCards from "./NutritionCards";
+
 export function SampleMealShowcase() {
-  const nutrients = [
-    ["Calories", "380–480 kcal"],
-    ["Protein", "14–19 g"],
-    ["Carbohydrates", "48–62 g"],
-    ["Fat", "14–20 g"],
-  ];
+  const [goal, setGoal] = useState<NutritionGoal>("Maintain weight");
   const ingredients = [
     "Cooked quinoa",
     "Seasoned chickpeas",
@@ -22,7 +28,7 @@ export function SampleMealShowcase() {
       </div>
       <h3>Mediterranean Quinoa & Chickpea Bowl</h3>
       <p className="subtitle small">
-        Typical healthy lunch bowl with grains, legumes, and vegetable toppings.
+        Illustrative lunch bowl with grains, legumes, and vegetable toppings.
       </p>
 
       <h4>Likely visible ingredients</h4>
@@ -39,29 +45,42 @@ export function SampleMealShowcase() {
         <strong>Assumed portion:</strong> One standard shallow bowl (~350g).
       </p>
       <p className="small">Nutrition confidence: Medium</p>
-      <dl className="nutrition-grid">
-        {nutrients.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="sample-goal-control">
+        <GoalTabs label="Explore a demo goal" value={goal} onChange={setGoal} />
+        <p className="small">{SAMPLE_GOAL_NOTICE}</p>
+        <p className="small" role="status">
+          Demo goal: {goal}. Comparison references shown below.
+        </p>
+      </div>
+      <NutritionCards
+        nutrition={SAMPLE_NUTRITION}
+        targets={GOAL_PRESETS[goal]}
+        scaleMaxima={GOAL_SCALE_MAXIMA}
+        demo
+      />
 
       <h4>Assumptions & uncertainty</h4>
       <ul className="uncertainties-list">
         <li>
-          Dressing volume, tahini oil concentration, and cooking fats cannot be verified from photos.
+          Dressing volume, tahini oil concentration, and cooking fats cannot be
+          verified from photos.
         </li>
         <li>
-          Bowl depth and exact quinoa density alter total carbohydrates and calories.
+          Bowl depth and exact quinoa density alter total carbohydrates and
+          calories.
         </li>
       </ul>
 
       <h4>Example preparation concept</h4>
       <ol className="prep-steps">
-        <li>Layer warm cooked quinoa with rinsed chickpeas and diced fresh vegetables.</li>
-        <li>Whisk tahini with lemon juice and a splash of water, then drizzle gently on top.</li>
+        <li>
+          Layer warm cooked quinoa with rinsed chickpeas and diced fresh
+          vegetables.
+        </li>
+        <li>
+          Whisk tahini with lemon juice and a splash of water, then drizzle
+          gently on top.
+        </li>
       </ol>
       <p className="notice sample-notice">
         Educational visual estimation only. Not medical or dietetic advice.
@@ -72,12 +91,17 @@ export function SampleMealShowcase() {
 
 export function SampleResultSection() {
   return (
-    <section className="landing-section" id="sample-result" aria-labelledby="sample-result-title">
+    <section
+      className="landing-section"
+      id="sample-result"
+      aria-labelledby="sample-result-title"
+    >
       <div className="section-heading">
-        <p className="eyebrow">Real Output Example</p>
+        <p className="eyebrow">Interactive Illustrative Example</p>
         <h2 id="sample-result-title">What a FoodLens analysis looks like</h2>
         <p className="subtitle">
-          Notice how nutrition is presented as honest ranges rather than falsely precise single numbers.
+          Notice how nutrition is presented as honest ranges rather than falsely
+          precise single numbers.
         </p>
       </div>
 
@@ -111,12 +135,17 @@ export function HowItWorks() {
   ];
 
   return (
-    <section className="landing-section" id="how-it-works" aria-labelledby="how-it-works-title">
+    <section
+      className="landing-section"
+      id="how-it-works"
+      aria-labelledby="how-it-works-title"
+    >
       <div className="section-heading">
         <p className="eyebrow">A simpler way to understand meals</p>
         <h2 id="how-it-works-title">How FoodLens AI Works</h2>
         <p className="subtitle">
-          Three straightforward steps to explore what is on your plate without tedious manual logging.
+          Three straightforward steps to explore what is on your plate without
+          tedious manual logging.
         </p>
       </div>
 
@@ -135,12 +164,17 @@ export function HowItWorks() {
 
 export function PhotoRealityGap() {
   return (
-    <section className="landing-section" id="why-ranges" aria-labelledby="why-ranges-title">
+    <section
+      className="landing-section"
+      id="why-ranges"
+      aria-labelledby="why-ranges-title"
+    >
       <div className="section-heading">
         <p className="eyebrow">Our Philosophy</p>
         <h2 id="why-ranges-title">The Photo Reality Gap</h2>
         <p className="subtitle">
-          Why we provide broad ranges and transparent uncertainty instead of single exact numbers.
+          Why we provide broad ranges and transparent uncertainty instead of
+          single exact numbers.
         </p>
       </div>
 
@@ -151,12 +185,21 @@ export function PhotoRealityGap() {
             <h3>The Myth of Exact Calories</h3>
           </div>
           <p className="small">
-            Many AI apps claim to pinpoint exact numbers like <em>"423 kcal"</em> from a quick 2D photo.
+            Many AI apps claim to pinpoint exact numbers like{" "}
+            <em>"423 kcal"</em> from a quick 2D photo.
           </p>
           <ul className="comparison-list">
-            <li>A photo cannot detect hidden cooking butter, oil, or sugar in sauces.</li>
-            <li>Dense bowl layers and depth cannot be measured from pixels alone.</li>
-            <li>Falsely exact numbers give a misleading impression of scientific precision.</li>
+            <li>
+              A photo cannot detect hidden cooking butter, oil, or sugar in
+              sauces.
+            </li>
+            <li>
+              Dense bowl layers and depth cannot be measured from pixels alone.
+            </li>
+            <li>
+              Falsely exact numbers give a misleading impression of scientific
+              precision.
+            </li>
           </ul>
         </div>
 
@@ -166,12 +209,19 @@ export function PhotoRealityGap() {
             <h3>The FoodLens Honest Approach</h3>
           </div>
           <p className="small">
-            We provide realistic Min–Max ranges tied to explicitly stated portion assumptions.
+            We provide realistic Min–Max ranges tied to explicitly stated
+            portion assumptions.
           </p>
           <ul className="comparison-list">
             <li>Nutrients presented as broad ranges (e.g. 380–480 kcal).</li>
-            <li>Portion size assumptions and uncertainties stated upfront on every card.</li>
-            <li>Explicit identification confidence scores and separation of visible vs. inferred items.</li>
+            <li>
+              Portion size assumptions and uncertainties stated upfront on every
+              card.
+            </li>
+            <li>
+              Explicit identification confidence scores and separation of
+              visible vs. inferred items.
+            </li>
           </ul>
         </div>
       </div>
@@ -202,12 +252,17 @@ export function TrustAndSafety() {
   ];
 
   return (
-    <section className="landing-section" id="privacy" aria-labelledby="privacy-title">
+    <section
+      className="landing-section"
+      id="privacy"
+      aria-labelledby="privacy-title"
+    >
       <div className="section-heading">
         <p className="eyebrow">Safe & Transparent</p>
         <h2 id="privacy-title">Built with Privacy and Restraint</h2>
         <p className="subtitle">
-          Lean, defensive architecture that respects your privacy and communicates limits clearly.
+          Lean, defensive architecture that respects your privacy and
+          communicates limits clearly.
         </p>
       </div>
 

@@ -1,3 +1,4 @@
+import AiSparkleIcon from "./AiSparkleIcon";
 import {
   HowItWorks,
   PhotoRealityGap,
@@ -9,7 +10,9 @@ interface LandingPageProps {
   onNavigateToAnalyzer: () => void;
 }
 
-export default function LandingPage({ onNavigateToAnalyzer }: LandingPageProps) {
+export default function LandingPage({
+  onNavigateToAnalyzer,
+}: LandingPageProps) {
   return (
     <div className="landing-page">
       <header className="full-width-header">
@@ -30,7 +33,7 @@ export default function LandingPage({ onNavigateToAnalyzer }: LandingPageProps) 
               className="primary nav-cta-btn"
               onClick={onNavigateToAnalyzer}
             >
-              Launch Analyzer →
+              Launch Analyzer <AiSparkleIcon />
             </button>
           </nav>
         </div>
@@ -54,7 +57,7 @@ export default function LandingPage({ onNavigateToAnalyzer }: LandingPageProps) 
               className="primary hero-btn"
               onClick={onNavigateToAnalyzer}
             >
-              Launch FoodLens Analyzer <span aria-hidden="true">→</span>
+              Launch FoodLens Analyzer <AiSparkleIcon />
             </button>
             <div className="hero-pills">
               <span className="badge">✔ Honest Ranges</span>
@@ -79,7 +82,7 @@ export default function LandingPage({ onNavigateToAnalyzer }: LandingPageProps) 
             className="primary banner-btn"
             onClick={onNavigateToAnalyzer}
           >
-            Start Photo Analysis <span aria-hidden="true">→</span>
+            Start Photo Analysis <AiSparkleIcon />
           </button>
         </section>
       </main>
@@ -104,7 +107,8 @@ export default function LandingPage({ onNavigateToAnalyzer }: LandingPageProps) 
           </div>
         </div>
         <p className="small footer-disclaimer">
-          FoodLens AI provides educational nutritional estimates and ingredient hypotheses. It is not a substitute for clinical or dietetic advice.
+          FoodLens AI provides educational nutritional estimates and ingredient
+          hypotheses. It is not a substitute for clinical or dietetic advice.
         </p>
       </footer>
     </div>

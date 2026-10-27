@@ -241,6 +241,154 @@ No user accounts, database, image/result persistence, result history, RAG, model
 - Historical Docker/CI checks are retained as past evidence, not current prerequisites. No account/running service changed and no real deployment performed.
 - **Evidence:** [native hosting instructions](deployment.md), [cleanup verification](testing.md#native-runtime-deployment-simplification--2026-10-27).
 
+### H-017 — Nutrition midpoint and illustrative references
+
+**Date:** 2026-10-27
+
+> i want new feature that we have a medium pont if that exced or lowest hten show ui
+
+**Status:** implemented and frontend-tested after “Implement the plan.”
+
+The user chose fixed references, then illustrative per-meal values: 600 kcal, 25 g protein, 75 g carbohydrates and 20 g fat. Added shared live/sample cards with retained ranges, approximate arithmetic midpoints, decorative interval/reference indicators and below/includes/above text. Whole-range comparison preserves uncertainty; equality includes the reference. Unknown/non-food results do not invent comparisons. Copy retains references and the educational notice. No runtime model prompt, API fields, credentials or backend changes were made. Baseline lint/29 tests and final lint/40 tests/build passed; see testing.md. No live output or manual browser evidence is claimed.
+
+### H-018 — Goal selector and user-defined per-meal targets
+
+**Date:** 2026-10-27
+
+> select weight gain or weight less or natureal then that calores and all lines changes
+
+**Status:** historical manual-entry implementation; replaced by the compact preset selector in H-020.
+
+Added Weight loss, Maintain weight and Weight gain; Maintain weight defaults with blank entries. Users enter their own four positive finite per-meal targets and apply them. Each goal retains separate drafts/applied targets in frontend session memory, including across navigation/new results. The selected profile changes comparison markers/labels and copy export, never the meal's estimated nutrient ranges or midpoint. Unknown/non-food rules and disclaimers remain. The landing sample remains independent with labelled illustrative references. No personal-data calculation, storage, backend transmission or model prompt change was introduced. Baseline lint/40 tests and final lint/50 tests/build passed; the initial new-test label-query failure and correction are recorded in testing.md. No live model output or manual browser verification is claimed.
+
+### H-019 — Automatic goal presets in the pictured landing sample
+
+**Date:** 2026-10-27
+
+> user need to select weight gain ,weight los maintain weight then that respct the nutrion line changes
+
+**Status:** implemented after “Automatic demo presets” was selected and the user requested updates to all related Markdown.
+
+Added local sample selection, default Maintain weight, with approved application examples: Weight loss 450 kcal/20 g protein/55 g carbohydrates/15 g fat; Maintain weight 600/25/75/20; Weight gain 750/30/95/25 per meal. Reference markers and demo comparison labels change immediately on fixed scales; food estimates/midpoints remain unchanged. Analyzer targets remain independent and user-entered. Native web research consulted FDA/NIDDK material on individual calorie needs/personalised planning; neither source endorses these arbitrary demonstration numbers. All affected current docs were updated while earlier feature records remain historical. No food-model prompt/API changes, extra inference, personal calculator or MCP integration. Baseline lint/50 tests and final lint/56 tests/build passed; see testing.md. No manual browser or new presentation export evidence is claimed.
+
+### H-020 — Simplify analyzer to a compact preset selector
+
+**Date:** 2026-10-27
+
+> insted this large detailing just user selct weight gain or los or maitain
+
+**Status:** implemented after “Implement the plan.”; supersedes the H-018 manual-entry UI.
+
+Removed inputs, Apply targets, draft/applied profiles and validation-specific styles. Analyzer now retains only the selected goal, default Maintain weight, and immediately derives the same illustrative per-meal references as the sample from one shared module. Reference markers and above/includes/below goal-reference labels change while estimates/midpoints/scales remain stable. Selection survives navigation/new results until refresh; sample selection and existing tabs remain independent. Copy includes all references and the educational notice. Updated current docs and retained old implementation/test evidence as history. No backend/API/prompt changes or extra provider calls. Baseline lint/56 tests and final lint/56 tests/build passed; see testing.md for the intermediate edit/check failure and final results. No manual browser/mobile check or regenerated deck was claimed.
+
+### H-021 — Goal tabs and comparison-coloured card borders
+
+**Date:** 2026-10-27
+
+> for now siple just card border jsut to chage color wiht respct that
+
+> insted goal selct box i want tab like style add that too in above plan
+
+**Status:** implemented after “Implement the plan.”
+
+Replaced the analyzer dropdown with native single-choice radio controls styled like the sample's segmented tabs, with active/focus styling, group label and native keyboard navigation. Existing sample controls remain independent. Added a constant 2px card border driven by whole-range status: above amber, below blue, includes green, unknown neutral. Presets, estimates, backgrounds, text labels and disclaimers remain unchanged. Baseline lint/56 tests passed. The first new keyboard regression hit missing CSS.escape in JSDOM; a scoped test-only shim enabled user-event's radio navigation. Final lint/58 tests/build passed. Updated relevant UI/accessibility/demo docs and actual testing/challenge records. No backend/schema/prompt changes, live inference, new screenshots or manual browser validation claimed.
+
+### H-022 — Apply analyzer goal controls to the sample section
+
+**Date:** 2026-10-27
+
+> in this sample result section tooo need this chnages as above
+
+**Status:** implemented after “Implement the plan.”
+
+Extracted GoalTabs as a shared controlled native-radio component and used it in both sample/analyzer. Removed old sample tab buttons, hidden dropdown and obsolete CSS. Sample selection remains local and independent; both use shared card status/border rules, presets and stable scales. Strengthened sample tests to operate real radio controls, verify matching border status classes/unknowns, keyboard focus/selection and state isolation without requests. Baseline and final TypeScript/58 tests passed; final production build passed. Attempted HTTP inspection of the supplied port 5175 URL failed with socket permission denied; no stale-style root cause or live appearance is asserted. Updated affected docs; no API/backend/model changes, new screenshots or slide export.
+
+### H-023 — Full-card status backgrounds and readable text
+
+**Date:** 2026-10-27
+
+> entrire card bg color need to change with respct bg color relted text color all need to change
+
+**Status:** implemented; supersedes the H-021 border-only visual treatment.
+
+Added shared CSS-variable palettes for above amber/brown, below blue/dark blue, includes green/dark green and unknown grey. Card text, badge, track, interval, markers and legend follow the theme. Borders remain subtle/2px; estimates, presets, scales, goal controls, comparison rules and disclaimers remain unchanged in both analyzer/sample. Baseline/final TypeScript and 58 tests passed; production build and source-palette contrast checks passed. Browser attempts failed due environment restrictions; the user then explicitly requested handling manual checks personally, so no further browser work was performed. Updated related docs and preserved older execution evidence. No API/backend/model changes, live inference, screenshots or deck export claimed.
+
+### H-024 — Explain nutrition colours in both views
+
+**Date:** 2026-10-27
+
+> this color chnages give an legends near by what the color meaning
+
+> in both anylse page and allso this stion /#sample-result too need this changes
+
+> Amber dont give this color text in ui
+
+**Status:** implemented after “Implement the plan.” and refined during implementation.
+
+Added a shared What the colours mean key above both card grids, with four decorative swatches and comparison-only labels: Above reference, Below reference, Range includes reference and Estimate unknown. Final UI labels omit colour names. Added a note that comparisons do not rate food health, wrapping layout and shared palette variables. Key persists across goal changes and is absent for non-food results. Baseline/final TypeScript/58 tests and production build passed; source text/palette contrast checks passed. Updated actual evidence and UI/demo docs. No backend/API/model change, browser checks, screenshots or new deck export.
+
+### H-025 — AI icon for launch buttons
+
+**Date:** 2026-10-27
+
+> insted that arrow give an ai realted icone in both alnding page and allosin nav bar too
+
+**Status:** implemented.
+
+Replaced arrows in navbar, hero and landing call-to-action banner with one reusable inline SVG sparkle icon. Icon inherits button colour and is decorative/hidden from assistive technology; text labels and navigation remain unchanged. No icon dependency or provider call added. Frontend TypeScript/58 tests/build and whitespace checks passed; no browser checks performed.
+
+### H-026 — Keep analysis summary at the panel top
+
+**Date:** 2026-10-27
+
+> make this section allways fixed top
+
+**Status:** implemented.
+
+Separated Your analysis/confidence/dish/copy from the scrolling details, including unclear-photo handling. Desktop uses existing panel bounds; mobile completed panels are capped at 85dvh. The panel remains in page flow rather than using a viewport-fixed overlay. Clipboard fallback remains accessible in a bounded scroller. Baseline TypeScript/58 tests and final TypeScript/59 tests/build passed; added a header-versus-detail structure regression. Updated README/architecture and actual challenge/test/week records. No browser checks performed as requested; no backend/API/model changes.
+
+### H-027 — AI loader experience and vision plate scanner
+
+**Date:** 2026-10-27
+
+> next i want when user click anylse photo insted loadin i want ai realted loader in both button place and allso in that your anylse section that circle place .understand my requrmnet and plan accordingly act like sneiour react and uiux developer
+
+**Status:** implemented.
+
+- Built rich AI loading indicators into both the submission button in Card 01 and the placeholder circle area in Card 02:
+  - **Analyze Photo button**: Added `.primary.is-analyzing` gradient shimmer animation (`ai-button-shimmer`), an animated AI sparkle SVG (`AiSparkleIcon`), and a glowing pulse indicator (`.btn-pulse-dot`), while preserving the accessible name `/Analyzing photo/` for screen readers and tests.
+  - **Card 02 AI Plate Scanner**: Replaced plain unicode `◯` with dedicated `AiPlateScanner` component. In idle state, renders a botanical plate SVG. In analyzing state, renders an active AI vision plate scanner with rotating conic-gradient ring, concentric sonar radar waves, orbiting satellite sparkles, a central plate reticle with crosshairs, and a sweeping vertical laser beam. Added a live `AI Vision Pipeline Active` badge and shimmering skeleton preview tags/cards.
+- Added tests in `AiPlateScanner.test.tsx`. Baseline 59 tests, final 61 tests across 6 files and production build passed. Go backend tests pass 100%. No backend or AI model changes made.
+
+### H-028 — Fix responsive goal tabs in analyzer and sample result
+
+**Date:** 2026-10-27
+
+> fix this responsive issue in both anylse page and http://127.0.0.1:5175/#sample-result this page section
+
+**Status:** implemented.
+
+- Replaced `display: inline-flex; flex-wrap: wrap; width: fit-content;` with an equal 3-column CSS Grid (`grid-template-columns: repeat(3, minmax(0, 1fr))`) and `width: 100%; max-width: 480px`, locking all 3 options into a single balanced horizontal row across desktop Card 02 (860px+) and tablets with no lopsided 2-and-1 wrapping.
+- Added container query (`@container goalbox (max-width: 330px)`) and mobile fallback (`@media (max-width: 420px)`) to cleanly stack into a full-width 3-row vertical pill list when width is strictly constrained on mobile devices.
+- Switched `.workspace` to stack at `< 859px` rather than 580px, and added mobile padding adjustments for `.sample-card` and `.sample-goal-control`.
+- Verified TypeScript lint (0 errors), all 61 Vitest tests passed, Vite production build succeeded in 661ms, and Go backend tests pass 100%.
+
+### H-029 — Fix mobile results panel cutoff and squished 2-column cards
+
+**Date:** 2026-10-27
+
+> fix this ui resposive issue too
+
+**Status:** implemented.
+
+- Identified that `.analyzer-main .card.results.has-analysis` was applying `max-height: 85dvh; overflow: hidden;` on mobile without a definite flex height, causing the card to slice through Carbohydrates and Fat and clip the rest of the results from being visible or scrollable.
+- Removed `max-height: 85dvh; overflow: hidden;` on mobile viewports (< 860px), allowing the card and scroll body to expand naturally (`overflow: visible; max-height: none;`) while giving `.analysis-summary` `position: sticky; top: 0; z-index: 10; background: #ffffff;` so the dish title, confidence badge, and copy button remain pinned as the user scrolls.
+- Updated `.nutrition-grid` to `repeat(auto-fit, minmax(210px, 1fr))` with `@media (max-width: 480px) { grid-template-columns: 1fr; }`, ensuring cards display in a clean, spacious single column on mobile devices instead of cramped 140px dual columns.
+- Verified TypeScript lint (0 errors), all 61 Vitest tests passed, Vite production build succeeded in 626ms, and Go backend tests pass 100%.
+
+
+
+
 ## Runtime food-analysis prompt versions
 
 Runtime prompts are model instructions, distinct from the development requests above. Current source: [backend/internal/ai/prompt.go](../backend/internal/ai/prompt.go). Both versions use the user message `Analyze this food photo. Return only the required JSON object.` and supply base64 image data separately. The backend owns the final disclaimer. All templates describe shapes; they are not observed food output.

@@ -117,3 +117,39 @@ Live camera access needs a supported browser, permission and HTTPS or localhost.
 ## One-service hosting
 
 Keep frontend and backend in this GitHub repository and run them together on Render's native Go runtime. Render builds React with npm, compiles Go and starts the Go server, which serves both the frontend and API. No separate frontend API URL or CORS setup is needed. Set only OLLAMA_API_KEY privately in Render and deploy manually with Auto-Deploy Off. See [deployment instructions](docs/deployment.md).
+
+## Nutrition goals and comparison indicators
+
+After analyzing a food photo, choose **Weight loss**, **Maintain weight** (default) or **Weight gain** using the compact **Your goal** tab-style buttons. These are a native single-choice radio group: Tab focuses the selected goal and arrow keys move/select within the group. References and nutrition lines update immediately using the illustrative per-meal presets below. No manual number entry or Apply button is needed. These are comparison examples, not personalised dietary advice or weight-change guarantees.
+
+Estimated ranges, midpoints, serving assumption and confidence stay unchanged. A range entirely above the reference shows **Above goal reference**; entirely below shows **Below goal reference**; overlapping or equal boundaries show **Includes goal reference**. For example, Weight gain with 800–950 kcal is above its 750 kcal reference. Unknown nutrients have no comparison; non-food results have no selector or nutrition advice. Scales stay fixed across goal changes for each result, so only reference markers move.
+
+The analyzer remembers its selected goal across navigation and new results until refresh, which resets it to Maintain weight. The landing sample has its own independent selection. Copy includes the selected goal, all illustrative references, comparisons and disclaimer. No goal selection is persisted or sent to Go/Ollama.
+
+### Interactive sample goal presets
+
+In the landing sample, use the same tab-style radio controls under **Explore a demo goal** to choose Weight loss, Maintain weight (default) or Weight gain. Reference markers, labels and coloured borders update immediately. Both sections support Tab entry and arrow-key selection; the sample has no hidden dropdown. Estimated ranges, midpoints and scale positions stay fixed; only the comparisons and reference markers change. No photo, key or model call is needed. The sample selection resets when its component is reopened; it never changes the analyzer selection.
+
+| Demo goal (per meal) | Calories | Protein | Carbohydrates | Fat |
+|---|---:|---:|---:|---:|
+| Weight loss | 450 kcal | 20 g | 55 g | 15 g |
+| Maintain weight | 600 kcal | 25 g | 75 g | 20 g |
+| Weight gain | 750 kcal | 30 g | 95 g | 25 g |
+
+These presets are application examples, not nutritional prescriptions or promises of weight change. “Below / Includes / Above demo reference” compares the whole estimated interval, including equality, rather than judging meal health. The analyzer reuses these same presets with “goal reference” labels and an independent selection.
+
+The [FDA explains that calorie needs vary with personal characteristics and activity](https://www.fda.gov/food/nutrition-facts-label/how-understand-and-use-nutrition-facts-label), while the [NIDDK Body Weight Planner describes personalised weight planning](https://www.niddk.nih.gov/health-information/weight-management/body-weight-planner). These sources inform the distinction between a demo and personal advice; they do **not** provide or endorse the preset numbers above. No personalised calculation was added.
+
+### Full-card nutrition themes
+
+Both `#/analyze` and `#sample-result` use full-card themes: pale amber/dark brown for Above reference, pale blue/dark blue for Below, pale green/dark green for Includes, and light grey/dark grey for Unknown. Headings, values, midpoint/reference text, badge, graph track, interval, markers and legend use coordinated colours. Borders remain subtle and consistently 2px wide.
+
+Goal selection updates the theme immediately using the existing whole-range comparison, including equality. Explicit status badges remain so meaning never depends on colour alone. Presets, estimates, midpoints, graph scales and disclaimers remain unchanged; colours are comparisons to illustrative references, not meal-health ratings. Source-palette checks passed the project's 4.5:1 normal-text and 3:1 meaningful graph-indicator contrast targets. Manual browser/mobile review is left to the user; automated checks do not certify rendered appearance.
+
+### Nutrition-colour legend
+
+A compact **What the colours mean** legend appears immediately above the cards in both `/#/analyze` and `/#sample-result`. Four swatches are paired with **Above reference**, **Below reference**, **Range includes reference** and **Estimate unknown**; colour names are omitted from the UI. The note explains that colours compare estimated ranges with the selected reference, not meal health. Items wrap on narrow screens. Non-food results have no nutrition cards or legend.
+
+### Pinned analysis summary
+
+The results panel keeps **Your analysis**, identification confidence, dish name and copy action above a separate scrolling details area. Ingredients, nutrition and preparation scroll beneath it. Desktop uses the existing bounded workspace; below 860px, completed results are capped at 85dvh so the same panel behaviour applies without a viewport-fixed overlay. The panel itself remains in normal page flow. Non-food results use the same summary/detail separation, and clipboard fallback text remains available in a bounded area. Browser/mobile verification is left to the user.

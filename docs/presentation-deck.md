@@ -3,8 +3,8 @@
 > **Deck Title:** FoodLens AI — Understand What’s on Your Plate  
 > **Target Audience:** Technical evaluators, product reviewers, engineering peers  
 > **Presentation Duration:** 3–5 minutes (Demo under 3 minutes)  
-> **Source Outline:** [`docs/presentation-outline.md`](file:///home/texol/arun/foodlens-ai-project-plan/foodlens-ai-project/docs/presentation-outline.md)  
-> **Screenshot Directory:** [`docs/screenshots/`](file:///home/texol/arun/foodlens-ai-project-plan/foodlens-ai-project/docs/screenshots/)
+> **Source Outline:** [`docs/presentation-outline.md`](presentation-outline.md)
+> **Screenshot Directory:** [`docs/screenshots/`](screenshots/)
 
 ---
 
@@ -38,7 +38,7 @@
 - **Date:** October 2026
 
 ### Speaker Notes
-> "Hello everyone. Today I'm presenting FoodLens AI, a safe, focused web application designed to help people explore what's on their plate using a single food photograph. We built this as a small, production-grade 1-day MVP that provides educational nutritional ranges and ingredient estimates without making false promises or giving medical advice. Let's dive in."
+> "Hello everyone. Today I'm presenting FoodLens AI, a safe, focused web application designed to help people explore what's on their plate using a single food photograph. We built this as a small, focused educational MVP that provides educational nutritional ranges and ingredient estimates without making false promises or giving medical advice. Let's dive in."
 
 ---
 
@@ -83,6 +83,8 @@
   - Likely visible ingredients vs. unseen recipe components.
   - Macronutrient grid: Calories (kcal), Protein (g), Carbohydrates (g), and Fat (g).
   - One simple, safe preparation idea (no medical meal plans).
+  - Interactive sample goals: Weight loss / Maintain weight / Weight gain move demo references on fixed scales, preserving meal estimates.
+  - Analyzer goals use a tab-style radio controls with immediate illustrative references; no number entry or Apply button. Sample and analyzer selections remain independent, and presets are not personalised recommendations.
 - **Zero-Storage Privacy & Export:**
   - Temporary in-memory processing only; no disk persistence and no user accounts.
   - Accessible single-click "Copy results" with automatic text-area fallback.
@@ -161,7 +163,7 @@
     - Explicit validation of status strings and confidence enums.
   - Invalid model output returns safe, typed error codes (`AI_INVALID_RESPONSE`) without leaking prompt internals.
 - **Context & Prompt Versioning:**
-  - All prompt iterations recorded in [`docs/prompt-history.md`](file:///home/texol/arun/foodlens-ai-project-plan/foodlens-ai-project/docs/prompt-history.md) across 14 documented milestones.
+  - All prompt iterations recorded in [`docs/prompt-history.md`](prompt-history.md) with chronological development entries and versioned runtime prompts.
 
 ### Screenshot Placement
 - Code block excerpt of `backend/internal/ai/prompt.go` or `skills/food-image-analysis/SKILL.md`.
@@ -180,8 +182,8 @@
 
 ### Slide Content
 - **Comprehensive Automated Verification:**
-  - **Backend (Go):** 100% pass across AI client, upload validator, config loader, domain parser, and HTTP handlers (`go test ./...`).
-  - **Frontend (Vitest):** 25 automated tests covering camera lifecycle, file validation, results rendering, and clipboard fallbacks (`npm test -- --run`).
+  - **Backend (Go):** Historical checks are recorded in `testing.md`; not rerun for this frontend-only feature.
+  - **Frontend (Vitest):** 56 automated tests covering camera lifecycle, file validation, results rendering, and clipboard fallbacks (`npm test -- --run`).
 - **Security & Privacy Guardrails:**
   - **Ephemeral processing:** Zero photos saved to disk, zero database records, zero analytics cookies.
   - **Credential isolation:** `OLLAMA_API_KEY` loaded only in backend environment; omitted from client code and logs.
@@ -192,11 +194,11 @@
   - Dependent on external cloud provider availability, latency, and billing limits.
 
 ### Screenshot Placement
-- **Left image:** `docs/screenshots/frontend-test-terminal.png` (25/25 passing tests).
+- **Left image:** `docs/screenshots/frontend-test-terminal.png` (capture current output; 56 tests last verified).
 - **Right image:** `docs/screenshots/foodlens-unclear-or-error.png` (polite error handling / non-food state).
 
 ### Speaker Notes *(~35 seconds)*
-> "Quality and security are proven by actual test suites, not assumptions. Our Go backend tests and 25 Vitest frontend tests pass 100%, covering every edge case from missing files to clipboard failures. Security-wise, food images are processed strictly in memory and discarded. We display privacy disclosures upfront and remind users that external cloud inference terms apply."
+> "Quality and security are proven by actual test suites, not assumptions. Our latest frontend check passed 56 tests, including sample goal references and analyzer state isolation. Backend evidence is recorded separately; tests do not establish every possible edge case. Security-wise, food images are processed strictly in memory and discarded. We display privacy disclosures upfront and remind users that external cloud inference terms apply."
 
 ---
 
@@ -237,7 +239,27 @@
 | 1 | Create Google Slides deck using the 16:9 widescreen layout | Ready |
 | 2 | Apply color scheme: Forest green (`#16a34a`), Warm neutral (`#f4f4f0`), Dark charcoal text | Ready |
 | 3 | Copy-paste slide titles, bullet points, and speaker notes from this document | Ready |
-| 4 | Capture screenshots using the specifications in [`docs/screenshots/README.md`](file:///home/texol/arun/foodlens-ai-project-plan/foodlens-ai-project/docs/screenshots/README.md) | In Progress |
+| 4 | Capture screenshots using the specifications in [`docs/screenshots/README.md`](screenshots/README.md) | In Progress |
 | 5 | Insert captured screenshots into Slides 2, 3, 5, and 6 | Pending screenshots |
-| 6 | Rehearse demo using [`docs/demo-script.md`](file:///home/texol/arun/foodlens-ai-project-plan/foodlens-ai-project/docs/demo-script.md) (keep under 3 minutes) | Ready |
+| 6 | Rehearse demo using [`docs/demo-script.md`](demo-script.md) (keep under 3 minutes) | Ready |
 | 7 | Share public view link in `docs/submission-checklist.md` | Pending deck creation |
+
+## Current sample-goal demo note — 2026-10-27
+
+Use the README preset table for all four values per goal. The sample selector changes comparison references only; whole-range comparisons include equality and never imply a meal is suitable for weight loss/gain. Switch profiles without submitting any photo. Then show the real analyzer's compact goal selector, immediate reference changes and independent selection. Sources linked in README explain personalisation, not endorsement of demo numbers. This Markdown was updated; the existing PowerPoint and generator were not regenerated or verified for these changes. Manual visuals and a recorded demo remain outstanding.
+
+## Goal-control appearance follow-up — 2026-10-27
+
+Show the analyzer's segmented single-choice controls, selected state and keyboard focus. Full-card themes mirror existing labels: above pale amber/dark brown, below pale blue/dark blue, includes pale green/dark green, unknown light/dark grey. They do not judge meal health or change estimated food values. Automated frontend verification now passes 58 tests plus TypeScript/build (see testing.md); no new screenshots, PowerPoint export or manual browser check was produced for this follow-up.
+
+## Sample/control parity — 2026-10-27
+
+The sample and analyzer now render the same GoalTabs native-radio component with matching segmented styling and comparison-coloured card backgrounds and text. Select goals by click or Tab/arrow keys; each section retains independent state. No hidden sample dropdown remains. The latest automated frontend result is 58 passing tests plus TypeScript/build. The PowerPoint and screenshots were not regenerated; browser inspection at port 5175 was blocked by socket permissions.
+
+## Full-card theme follow-up — 2026-10-27
+
+Card background, primary/secondary text, badge and graph colours are now coordinated per status; borders are subtle and remain 2px. Source-palette contrast checks passed, along with TypeScript, 58 frontend tests and the production build. The user will do browser/mobile verification manually. No new PowerPoint or screenshots were generated in this follow-up.
+
+## Colour-key addition — 2026-10-27
+
+The analyzer and sample now show What the colours mean above the cards. Text labels name the comparison status without colour names; decorative swatches match shared card palettes. The key stays visible across goal changes and is absent for non-food results. This Markdown is updated, but no new PowerPoint, screenshot or recorded demo was generated.

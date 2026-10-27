@@ -86,3 +86,13 @@ For AI_INVALID_RESPONSE the backend logs controlled rejection metadata: model ID
 Go now serves the built frontend at GET/HEAD / and existing asset paths, using only the frontend build directory. Missing assets, directories and hidden/private paths return 404; unsupported static methods return 405. Static responses use their appropriate content type and no-cache; they do not use the JSON error contract. All /api paths, including unknown ones and methods, continue through the existing JSON API handler. API response fields and frontend types are unchanged.
 
 PORT is optional platform-provided infrastructure metadata: valid ports 1–65535 bind 0.0.0.0; without it the local address stays 127.0.0.1:8080. The private .env remains key-only. Process health does not assert frontend asset availability or provider access; verify the homepage and assets separately after a manual native deployment.
+
+## Frontend-derived nutrition comparisons
+
+The request/response schema is unchanged. React derives approximate midpoints and whole-range comparisons from validated nutrient ranges. A compact goal selector immediately chooses the shared illustrative per-meal presets in README; Maintain weight defaults. Goals/references are not sent to the API or model, and changing a goal never changes photo estimates. There is no manual-target form or Apply step.
+
+A maximum below the reference is “Below goal reference”, a minimum above it is “Above goal reference”, otherwise “Includes goal reference” applies, with inclusive equality. Null nutrients produce no comparison; non-food results have no goal selector or nutritional advice. The independent landing sample uses the same constants with “demo reference” labels. These are application examples, not dietary prescriptions or guaranteed weight outcomes. No goal/reference/midpoint field was added to requests/responses; confidence remains the original estimate confidence.
+
+The analyzer's goal control is now a native radio group styled as tabs. Full-card colour themes mirror the existing comparison status (above amber, below blue, includes green, unknown neutral); colours are frontend presentation, not new API fields or dietary judgements. The API contract and TypeScript response shape remain unchanged.
+
+Sample and analyzer now share the same native radio goal control and status-driven card colour themes, while retaining independent selections. This is presentation-only; requests, responses and provider prompts remain unchanged.

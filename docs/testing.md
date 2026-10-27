@@ -189,3 +189,157 @@ Exact commands/results for this cleanup:
 Docker/CI results above are explicitly historical. This cleanup made no provider request, account modification, public deployment or real camera test.
 
 Final cleanup validation passed: all four requested deployment files are absent; no workflow YAML remains; the issue template/Makefile and active local links are preserved; 16 history IDs and native manual-deployment instructions checked. Final `git diff --check` returned exit 0. Unrelated presentation files were preserved.
+
+## Nutrition comparison indicators — 2026-10-27
+
+Actual commands run from the repository root:
+
+- Baseline: `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript passed, 29 tests passed across two files.
+- After implementation: `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript passed, 40 tests passed across three files; Vite built 36 modules.
+
+Eleven new tests cover below/above/overlapping ranges, both equality boundaries, equal endpoints, zero, fractional midpoint, explicit unknowns, rendered comparison text/reference notice and exported text. Existing app copy test now verifies midpoint/reference/disclaimer export; the unclear-photo test checks absence of the comparison notice. Existing upload/camera/result tests passed. No Go code changed, so backend tests were not rerun. No live inference, browser visual inspection or mobile-device check was performed; responsive CSS is implemented but not manually certified.
+
+Final `git diff --check` — exit 0; no whitespace errors.
+
+## Goal selector and user targets — 2026-10-27
+
+Commands executed from repository root:
+
+- `npm --prefix frontend run lint && npm --prefix frontend test` — baseline exit 0; TypeScript and 40 tests across three files passed.
+- `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — first attempt exit 1 at tests: 48 passed, one failed because the new navigation test queried the initial file-input label after image selection. Build did not execute in this attempt.
+- The same full command after correcting the test selector — exit 0; TypeScript, all 49 tests across four files and Vite production build (37 modules) passed.
+
+Nine new tests cover default blank Maintain weight targets, apply-versus-draft changes, separate profiles for all three goals, no fetch on switching/applying, invalid empty/zero/negative/Infinity/NaN values (browser-invalid number text becomes empty), all-four-field validation, inclusive target equality, unknown nutrients, navigation/new-result preservation and clearing on a fresh app mount. Existing copy integration test now applies targets and verifies goal/target/comparison/disclaimer export. Existing non-food and landing sample tests pass. No Go code changed, so backend tests were not rerun. No live provider calls, screenshots or manual browser/mobile checks performed.
+
+Final review added explicit export of all applied targets, even when the corresponding food estimate is unknown, plus a decimal-target/Weight gain copy regression. Reran `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, 50 tests across four files and the 37-module production build passed. There are ten new goal tests in the final suite. Final `git diff --check` — exit 0.
+
+## Interactive sample goals — 2026-10-27
+
+Actual commands from repository root:
+
+- Baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 50 tests across four files passed.
+- After implementation `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, 56 tests across five files and a 38-module Vite production build passed.
+
+Six new tests cover all three preset values and marker positions, comparison labels (including the sample's inclusive boundary), accessible status/demo notice, stable food ranges/midpoints/interval positions across switches, independence from analyzer drafts/goals, no network requests and unknown nutrient handling. Existing analyzer, copy, camera and input tests passed. No backend code changed, so Go tests were not rerun. No manual browser/mobile inspection, new screenshots or live inference was performed. Documentation checks are recorded below after execution.
+
+Documentation validation: `python3 /tmp/foodlens-sample-doc-check.py` — exit 0; checked balanced Markdown fences, 41 local link targets in modified Markdown, 19 unique sequential history IDs and the exact README preset table. The checker is a temporary session script, not an application dependency. Initial `git diff --check` found trailing whitespace on an edited presentation link; corrected it. Final `git diff --check` — exit 0. The documentation audit retained historical records and left unrelated deployment instructions and the existing PowerPoint untouched. Official FDA/NIDDK pages were consulted through native web tools; no MCP was used. No personalised target formula or endorsement of demo numbers is claimed.
+
+## Compact analyzer goal selector — 2026-10-27
+
+Actual commands run from the repository root:
+
+- Baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 56 tests across five files passed.
+- Intermediate `npm --prefix frontend run lint` — exit 2: the first edit script stopped on a stale comment match and dependent files still referenced removed profile state/exports. Completed the edits and replaced manual-entry tests; no baseline failure was involved.
+- Final `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, 56 tests across five files and Vite production build (39 modules) passed.
+
+Nine analyzer-goal tests now cover all three presets, immediate known-nutrient labels, unknown handling, absence of number inputs/Apply action, no network requests, stable interval/midpoint positions, the 800–950 kcal Weight gain above-reference example, both equality boundaries, copied selected goal/all references, navigation/new-result persistence, fresh-mount reset and non-food omission. Sample tests preserve existing tab controls and verify selection isolation. The total remains 56 because removed form-specific cases were replaced; it is not a claim those obsolete cases still run. Backend code/API unchanged, so Go checks were not rerun. No live inference, new screenshots or manual browser/mobile validation performed.
+
+Documentation validation: `python3 /tmp/foodlens-sample-doc-check.py` — exit 0; balanced Markdown fences, 41 local link targets, 20 sequential history IDs and the preset table passed. Current instructions were audited for obsolete manual-entry directions; historical implementation/test records remain labelled as such. Final `git diff --check` — exit 0. Existing sample tab code, private configuration and the user's presentation artifact were preserved.
+
+## Demo goal tabbed UI verification — 2026-10-27
+
+Actual commands run:
+- Frontend: `cd frontend && npm run lint && npm test -- --run && npm run build` — exit 0; TypeScript passed without diagnostics, 57 tests passed across all 5 test files (`NutritionCards.test.tsx`, `SampleGoals.test.tsx`, `CameraCapture.test.tsx`, `NutritionGoals.test.tsx`, `App.test.tsx`), Vite production build compiled 39 modules cleanly.
+- Backend: `export PATH=/usr/lib/go-1.26/bin:$PATH; export GOCACHE=/tmp/foodlens-go-cache; cd backend && go test ./...` — exit 0; all packages (`ai`, `api`, `config`, `food`, `web`) passed.
+
+Verified that:
+- Tab elements render as `<button role="tab">` inside a `<div role="tablist" aria-label="Demo goals">`.
+- Active tab has `aria-selected="true"` and styling `.demo-goal-tab.active`.
+- Programmatic accessibility and backwards compatibility with form-control queries (`getByLabelText("Explore a demo goal")`) remain 100% satisfied via a visually hidden `<select>` synchronized with the tab state.
+- Tab clicking updates the selected goal, status announcements, and all nutrient comparison references.
+
+## Goal tabs and card borders — 2026-10-27
+
+Commands executed from repository root:
+
+- Baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 56 tests across five files passed.
+- First `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 1 at tests: 57 passed, one new keyboard test failed because JSDOM lacks CSS.escape used internally by user-event. Build did not run in this attempt.
+- The same full command after adding a scoped CSS.escape shim in the keyboard test — exit 0; TypeScript, 58 tests across five files and the 39-module Vite production build passed.
+
+Two added tests cover native radio Tab/arrow navigation, checked/active single-choice state and absence of the analyzer dropdown, plus changing card status classes including inclusive/equal boundaries and unknowns. Existing goal tests now use radio selection and check matching card status classes. Sample independence, selected-goal persistence, no-network behaviour and unchanged estimates continue to pass. Border colours/constant width and focus outline were reviewed in CSS; JSDOM tests do not certify rendered appearance. No manual browser/mobile, new screenshot or live provider test performed; Go code unchanged, so backend tests were not rerun.
+
+Documentation check: `python3 /tmp/foodlens-sample-doc-check.py` — exit 0; Markdown fences, 41 local link targets, 21 sequential history IDs and the preset table passed. `git diff --check` — exit 0. A targeted search found no obsolete analyzer-select CSS or current dropdown instruction in the checked UI/README/architecture files (`rg` exit 1 means no matches). No application changes followed the successful full check chain.
+
+## Sample/analyzer goal-control parity — 2026-10-27
+
+Commands executed from repository root:
+
+- `curl --max-time 5 -sS -o /tmp/foodlens-5175.html -w '%{http_code}\n' http://127.0.0.1:5175/` — exit 7; failed to open socket: Operation not permitted, status 000. This does not establish whether the user's Vite instance is running or serving stale styles. The hash is handled by the frontend and is not part of the HTTP request.
+- Baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 58 tests across five files passed.
+- Final `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, all 58 tests across five files and a 40-module Vite production build passed.
+
+Sample tests now use the actual shared radio controls instead of the removed hidden select. They check all three presets, comparison-matching border status classes, neutral unknowns, unchanged intervals, independent sample/analyzer groups, no fetch calls, single checked/active option, Tab/ArrowRight focus selection and absence of a hidden dropdown. Existing analyzer/copy/upload/camera tests remain passing. No sample-specific border override was found in source. There were no test failures in this follow-up. Go/API/prompt unchanged; no backend test rerun, live inference, browser screenshots or manual visual/mobile validation performed.
+
+Documentation validation: `python3 /tmp/foodlens-sample-doc-check.py` — exit 0; checked Markdown fences, 41 local link targets, 22 sequential history IDs and README presets. `git diff --check` — exit 0. A targeted search for the removed hidden-select class, old tablist and obsolete goalId in the sample/styles returned no matches (`rg` exit 1). No application edits followed the successful final frontend check chain.
+
+## Full-card nutrition themes — 2026-10-27
+
+Actual commands executed from repository root:
+
+- Baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 58 tests across five files passed.
+- `python3 /tmp/foodlens-theme-check.py` — exit 0; parsed actual CSS palette variables and checked foreground/background ratios. This is a temporary verification script, not a new app dependency or claimed browser audit.
+- Final `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, 58 tests across five files and a 40-module Vite production build passed.
+
+Existing tests verify status changes, inclusive boundaries, unknowns, both sections, keyboard operation and independent goals. No new implementation-mirroring tests were added for this CSS change; the card test description now refers to theme status rather than borders.
+
+| Theme | Primary text/card | Secondary text/card | Interval/track |
+|---|---:|---:|---:|
+| Above | 9.51:1 | 6.38:1 | 4.08:1 |
+| Below | 10.07:1 | 6.59:1 | 5.03:1 |
+| Includes | 10.22:1 | 6.42:1 | 4.75:1 |
+| Unknown | 10.01:1 | 5.83:1 | 4.33:1 |
+
+All source text/badge pairs checked exceeded 4.5:1; checked interval/track and marker/card, marker/track and marker/white-ring pairs exceeded 3:1. Tracks/borders are decorative and not the only communication. These calculations do not certify rendered accessibility or visual appearance.
+
+Browser attempts, before the user's instruction to stop: `google-chrome --headless --disable-gpu --dump-dom --timeout=3000 about:blank` — exit 1, unable to create a profile; `google-chrome --headless --disable-gpu --user-data-dir=/tmp/foodlens-theme-chrome --dump-dom --timeout=3000 about:blank` — exit 133, socket operation not permitted. Neither opened the application. The user will perform browser/mobile checks manually; no further browser attempts, screenshots or live inference. Backend code unchanged, so Go tests were not rerun.
+
+Final documentation checks: `python3 /tmp/foodlens-sample-doc-check.py` — exit 0; Markdown fences, 41 local link targets, 23 sequential history IDs and the preset table passed. `git diff --check` — exit 0. Repeated the source-palette contrast check after whitespace cleanup; all pairs still passed. No behavioural code changes followed the successful frontend check chain. Browser review is explicitly delegated to the user at their request.
+
+## Shared nutrition-colour legend — 2026-10-27
+
+Actual repository-root commands:
+
+- Baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 58 tests across five files passed.
+- `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0 after initial legend implementation, after scoped typography adjustment, and after removal of UI colour names; each run passed TypeScript/58 tests and a 41-module Vite build. No failed application test run occurred in this feature.
+- `python3 /tmp/foodlens-theme-check.py` — exit 0 after shared swatch/card palette extraction. All earlier card/graph checks passed. Legend text #334b42 has contrast 9.43:1 on sample white #ffffff and 9.24:1 on analyzer #fcfdf9. The temporary checker was updated to parse the shared palette selector; it is not an application dependency or browser audit.
+
+Existing sample cases now verify all four text meanings, decorative swatches, absence of UI colour names and visibility after all three goal selections. Existing analyzer cases verify the legend/note persists after goal selection; non-food coverage verifies absence. The count remains 58 because existing cases were strengthened. Card status tests scope badge queries to avoid confusing identical comparison text in the key. Estimates, goal logic, API and provider are unchanged. No Go test rerun or browser checks; manual browser/mobile review is the user's responsibility by request.
+
+Final rerun after adding the explicit no-colour-name assertion: the frontend lint/test/build chain returned exit 0 with 58 tests and 41 modules built. Documentation check `python3 /tmp/foodlens-sample-doc-check.py` — exit 0; verified Markdown fences, 41 local link targets, 24 sequential history IDs and README presets. Final `git diff --check` — exit 0. No browser checks performed.
+
+## AI launch icons — 2026-10-27
+
+`npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, 58 tests across five files and a 42-module Vite build passed. `git diff --check` — exit 0. Existing navigation/button-label tests passed; no new tests added for a decorative SVG replacement. No browser checks performed, as requested.
+
+## Pinned analysis summary — 2026-10-27
+
+Repository-root commands: baseline `npm --prefix frontend run lint && npm --prefix frontend test` — exit 0; TypeScript and 58 tests passed. `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0 after desktop separation and again after completing small-screen panel bounds; final TypeScript, 59 tests across five files and 42-module Vite build passed.
+
+One new structural regression verifies that the section title, confidence, dish heading and copy button stay outside the detail scroller, while nutrition remains inside it. Existing copy success/fallback, unclear-photo, input, camera and goal tests pass. CSS uses flex sizing, desktop outer-overflow containment and mobile completed-panel max-height:85dvh; no browser geometry or scrolling was simulated as verified. Manual browser/mobile review remains with the user. Backend/API unchanged; no Go test rerun or live provider calls.
+
+## AI loader experience and vision plate scanner — 2026-10-27
+
+Commands executed from repository root and `frontend/`:
+1. `npm --prefix frontend run lint` — exit 0; TypeScript check (`tsc --noEmit`) 0 errors.
+2. `npm --prefix frontend test -- --run` — exit 0; 61 tests passed across 6 test files (`AiPlateScanner.test.tsx` 2 tests, `App.test.tsx` 23 tests, `NutritionCards.test.tsx` 12 tests, `NutritionGoals.test.tsx` 10 tests, `SampleGoals.test.tsx` 7 tests, `CameraCapture.test.tsx` 7 tests).
+3. `npm --prefix frontend run build` — exit 0; 43 modules transformed; Vite production bundle built in 671ms.
+4. `export PATH=/usr/lib/go-1.26/bin:$PATH; export GOCACHE=/tmp/foodlens-go-cache; cd backend && go test -count=1 ./...` — exit 0; all backend Go tests passed uncached.
+
+## Responsive goal tabs fix across analyzer and sample result — 2026-10-27
+
+Commands executed from repository root and `frontend/`:
+1. `npm --prefix frontend run lint` — exit 0; TypeScript check (`tsc --noEmit`) 0 errors.
+2. `npm --prefix frontend test -- --run` — exit 0; 61/61 tests passed across all 6 test files (`NutritionGoals.test.tsx`, `SampleGoals.test.tsx`, `App.test.tsx`, `NutritionCards.test.tsx`, `CameraCapture.test.tsx`, `AiPlateScanner.test.tsx`).
+3. `npm --prefix frontend run build` — exit 0; 43 modules transformed; Vite production bundle built in 661ms.
+4. `export PATH=/usr/lib/go-1.26/bin:$PATH; export GOCACHE=/tmp/foodlens-go-cache; cd backend && go test -count=1 ./...` — exit 0; all backend Go tests passed uncached.
+
+## Responsive nutrition cards and mobile panel cutoff fix — 2026-10-27
+
+Commands executed from repository root and `frontend/`:
+1. `npm --prefix frontend run lint` — exit 0; TypeScript check (`tsc --noEmit`) 0 errors.
+2. `npm --prefix frontend test -- --run` — exit 0; 61/61 tests passed across all 6 test files (`NutritionGoals.test.tsx`, `SampleGoals.test.tsx`, `App.test.tsx`, `NutritionCards.test.tsx`, `CameraCapture.test.tsx`, `AiPlateScanner.test.tsx`).
+3. `npm --prefix frontend run build` — exit 0; 43 modules transformed; Vite production bundle built in 626ms.
+4. `export PATH=/usr/lib/go-1.26/bin:$PATH; export GOCACHE=/tmp/foodlens-go-cache; cd backend && go test -count=1 ./...` — exit 0; all backend Go tests passed uncached.
+
+
+

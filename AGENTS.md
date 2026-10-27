@@ -36,3 +36,7 @@ Build FoodLens AI as a safe, small, one-day MVP. Prefer a working end-to-end pat
 
 ## Security
 Never commit `.env`, real API keys, credentials, personal data, or private food photos. Never imply that a key grants free/unlimited usage or that hosted inference is suitable for sensitive or regulated workloads. Keep privacy limitations visible in the UI and README.
+
+## Nutrition comparison UI
+
+Preserve estimated ranges, midpoints, serving assumptions and confidence when comparison goals change. The landing sample uses labelled, application-defined demo presets; the analyzer uses the same illustrative presets via a compact selector. Never describe demo presets as model output, researched dietary prescriptions or guaranteed weight outcomes. Sample reference changes must not move the estimate interval by rescaling or overwrite the analyzer selection. See README for current preset values.

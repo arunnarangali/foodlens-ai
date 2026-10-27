@@ -39,3 +39,11 @@ Root Dockerfile, context exclusions, Go static hosting and platform-port handlin
 ## Current deployment simplification — 2026-10-27
 
 The Docker/CI artifacts were removed by request; their earlier preparation record is historical. Native Render settings and direct build/start instructions are documented in deployment.md. Go static hosting/PORT support, Makefile and tests remain. No native service, public URL, screenshot or successful live inference is claimed from this cleanup.
+
+## Interactive sample goals evidence — 2026-10-27
+
+Implemented automatic sample demo profiles with stable interval positions and independent user-target analyzer state. Preset values, research boundaries and disclaimers are documented in README. Final TypeScript/56 frontend tests/build passed; see testing.md. The Markdown presentation/demo instructions are updated, but no new PowerPoint, screenshots, live model result or demo recording was generated for this feature. No API/model configuration changes were made.
+
+## Compact analyzer goals evidence — 2026-10-27
+
+The analyzer now shares the approved illustrative presets and requires only a goal selection; manual input/apply work is superseded. The baseline and final frontend suites both passed 56 tests (test cases changed with the removed form); TypeScript and production build passed. Current Markdown instructions/demo material were updated. No new PowerPoint, screenshots, live model evidence or hosted deployment created.

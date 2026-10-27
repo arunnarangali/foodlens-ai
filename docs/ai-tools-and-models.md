@@ -46,3 +46,7 @@ Codex assisted implementation; exact coding-model identifier not recorded. Nativ
 ## Current setup simplification
 
 OLLAMA_API_KEY is the sole environment/file setting. The backend explicitly loads its private .env with exported-key precedence; all other runtime settings are code defaults. Key-only setup does not imply a free-model detection API: /api/tags advertises capabilities, not allowance/price/account balance. The default model is a public-listing choice, not a verified free entitlement. No live requests were made during this change.
+
+## Sample goals and research boundary — 2026-10-27
+
+Shared sample/analyzer presets are frontend constants, not model generations; see README for all three profiles. They do not change model settings, prompts, inference counts or food estimates. Native web tools consulted the [FDA label guidance](https://www.fda.gov/food/nutrition-facts-label/how-understand-and-use-nutrition-facts-label) and [NIDDK planner overview](https://www.niddk.nih.gov/health-information/weight-management/body-weight-planner). The FDA describes individual variation in calorie needs; NIDDK describes personalised planning. Neither source supplies or endorses FoodLens demo numbers. No personalised calculator, new provider or MCP integration was introduced.
