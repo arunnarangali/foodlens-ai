@@ -142,3 +142,9 @@ From backend: `make` — exit 0; help listed targets. `GOCACHE=/tmp/foodlens-go-
 ## Camera capture and placeholder cleanup — 2026-10-27
 
 From frontend: `npm run lint && npm test && npm run build` — final exit 0; TypeScript passed, 25 tests passed across two files, Vite built 31 modules. Camera tests cover video-only opening, cancel/track cleanup, capture into preview without fetch, removal, denied permission, unsupported browsers, late permission cancellation, unmount cleanup and frame readiness. Initial attempts failed due to wrong working directory, then a misplaced helper; both were corrected before the successful final run. `git diff --check` passed. Placeholder cleanup removed 11 files; no new tests were needed for marker deletion. Real camera hardware/mobile layouts and HTTPS deployment were not manually verified; no claim of live camera certification is made.
+
+## Prompt and feature history consolidation — 2026-10-27
+
+Documentation-only validation: `python3 /tmp/foodlens-history-check.py` checked 14 unique sequential history IDs, five historical scaffold templates, exact agreement of the current V2 prompt with the Go constant, balanced code fences, local file/heading links and the README history link. `git diff --check` checked whitespace. No application tests were rerun for this documentation-only change; prior results retain their historical scope. The checker is a temporary session script, not a new application dependency or repository test suite.
+
+Result: both documentation checks returned exit 0; the checker verified 27 local file/heading links. No missing links, duplicate task IDs, prompt mismatch or whitespace errors were found.

@@ -61,3 +61,7 @@ Added backend Makefile and usage documentation. Tests, vet, binary build and cle
 ## Camera capture and placeholder cleanup — 2026-10-27
 
 Added live camera capture with permission/error states, JPEG preview through existing validation, and stream cleanup; no automatic upload. Removed 11 .gitkeep markers at user request. Final frontend TypeScript checks, 25 tests and production build pass. No live device/browser or provider test performed.
+
+## Prompt and feature history consolidation — 2026-10-27
+
+Consolidated docs/prompt-history.md into 14 chronological request/feature entries, a feature summary, two runtime prompt versions and a labelled historical-template appendix. Added a README link. This is documentation-only; application features and test claims were not changed or reverified. Existing user staging, file relocations and deletions were preserved.

@@ -100,6 +100,8 @@ Ollama currently documents [cloud structured outputs as unsupported](https://doc
 
 ## Project documentation
 
+See the [prompt and feature history](docs/prompt-history.md) for the chronological request timeline, feature outcomes, provider changes and versioned runtime prompts.
+
 The `docs/` directory contains the API contract, architecture, model settings, exact prompt history, context handoff, actual challenges/test records, security review, workflow, weekly updates and demo/presentation outlines. Templates or old records are explicitly historical; they do not constitute live demo evidence.
 
 ## Troubleshooting AI_INVALID_RESPONSE

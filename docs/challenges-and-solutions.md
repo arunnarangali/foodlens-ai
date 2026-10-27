@@ -60,3 +60,7 @@ The default go executable is the Snap launcher, so Makefile verification used th
 ## Camera capture and placeholder cleanup — 2026-10-27
 
 Camera access is browser/permission/secure-context dependent, so the existing file picker remains available. Session invalidation stops late permission responses after cancellation. An initial check was mistakenly run at the project root (no package.json); rerunning in frontend reached TypeScript and caught a helper placed inside an effect. Moved the helper into component scope; the final lint/test/build chain passed. Camera hardware was not exercised.
+
+## Prompt and feature history consolidation — 2026-10-27
+
+The old prompt log mixed unused scaffold templates with execution entries and still contained a no-implementation placeholder. Consolidated the available conversation and repository evidence, separated undone/superseded work from current features and removed the stale placeholder. Public-listing, mock-test and live-account evidence are distinguished; unknown history was not reconstructed as fact.
