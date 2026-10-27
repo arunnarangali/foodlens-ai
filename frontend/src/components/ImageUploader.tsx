@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CameraCapture from "./CameraCapture";
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 export function validateImage(file: File): string | null {
   if (!["image/jpeg", "image/png", "image/webp"].includes(file.type))
@@ -29,6 +30,11 @@ export default function ImageUploader({
     setPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [file]);
+  function selectImage(next: File) {
+    const error = validateImage(next);
+    onChange(error ? null : next);
+    onError(error || "");
+  }
   return (
     <div className="upload-area">
       {preview ? (
@@ -76,11 +82,10 @@ export default function ImageUploader({
           const next = event.target.files?.[0];
           event.target.value = "";
           if (!next) return;
-          const error = validateImage(next);
-          onChange(error ? null : next);
-          onError(error || "");
+          selectImage(next);
         }}
       />
+      <CameraCapture disabled={disabled} onCapture={selectImage} onError={onError} />
       <p id="upload-help" className="small">
         JPEG, PNG or WebP · Up to 5 MiB
       </p>

@@ -52,3 +52,11 @@ The prior source accepted optional address/model/timeout/allowlist variables whi
 Observed: the user received the generic AI_INVALID_RESPONSE error. Code review confirmed that envelope, truncation, JSON and semantic failures were all collapsed into that code without safe diagnostic metadata. The exact live reason was not available and is not asserted.
 
 Fix: keep the public error stable while logging controlled reason/approved-field/size metadata only; replace raw parsing errors with safe typed validation errors. Add complete analyzed/non-food output templates. A mocked regression demonstrates acceptance of valid JSON wrapped in a whole-response Markdown fence; surrounding prose, multiple objects and invalid nutrient data remain rejected. No claim is made that Markdown was the user's actual failure. Thinking and token/deadline budgets remain unchanged; no live credits consumed.
+
+## Backend Makefile — 2026-10-27
+
+The default go executable is the Snap launcher, so Makefile verification used the installed standalone Go path through the GO make variable and a writable /tmp Go cache. No system settings changed.
+
+## Camera capture and placeholder cleanup — 2026-10-27
+
+Camera access is browser/permission/secure-context dependent, so the existing file picker remains available. Session invalidation stops late permission responses after cancellation. An initial check was mistakenly run at the project root (no package.json); rerunning in frontend reached TypeScript and caught a helper placed inside an effect. Moved the helper into component scope; the final lint/test/build chain passed. Camera hardware was not exercised.

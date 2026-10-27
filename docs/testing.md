@@ -134,3 +134,11 @@ The backend checks content signatures only. Corrupt files with supported signatu
 `git check-ignore --no-index frontend/tsconfig.tsbuildinfo frontend/npm-debug.log backend/server backend/.env frontend/node_modules/example/index.js frontend/dist/index.html` returned exit 0 and listed all six paths.
 
 `git check-ignore --no-index .env.example frontend/src/App.tsx frontend/package-lock.json backend/go.mod` returned exit 1 with no output, confirming those paths are not ignored. These checks use representative paths and do not create files. No application tests were needed for ignore-only rules.
+
+## Backend Makefile — 2026-10-27
+
+From backend: `make` — exit 0; help listed targets. `GOCACHE=/tmp/foodlens-go-cache make GO=/usr/lib/go-1.26/bin/go check build` — exit 0; Go tests, vet and binary build passed. `make -n run fmt` — exit 0; command expansion verified only, neither target executed. `make clean` — exit 0; generated server binary removed. No new tests needed for command aliases.
+
+## Camera capture and placeholder cleanup — 2026-10-27
+
+From frontend: `npm run lint && npm test && npm run build` — final exit 0; TypeScript passed, 25 tests passed across two files, Vite built 31 modules. Camera tests cover video-only opening, cancel/track cleanup, capture into preview without fetch, removal, denied permission, unsupported browsers, late permission cancellation, unmount cleanup and frame readiness. Initial attempts failed due to wrong working directory, then a misplaced helper; both were corrected before the successful final run. `git diff --check` passed. Placeholder cleanup removed 11 files; no new tests were needed for marker deletion. Real camera hardware/mobile layouts and HTTPS deployment were not manually verified; no claim of live camera certification is made.

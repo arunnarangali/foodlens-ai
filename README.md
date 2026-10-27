@@ -105,3 +105,9 @@ The `docs/` directory contains the API contract, architecture, model settings, e
 ## Troubleshooting AI_INVALID_RESPONSE
 
 Restart Go after code updates. Valid JSON enclosed in one Markdown fence is now accepted, and the model prompt includes full analyzed/non-food JSON templates. If the response still fails, check the Go terminal for `foodlens_ai_response_rejected` and its `reason`/`field`. Share only that controlled diagnostic line, never your key, image bytes or a complete model response. For example, `output_truncated` identifies an unfinished answer; `missing_field` identifies schema drift. The public message stays safe and generic. No live response was reproduced during this fix, so these changes do not establish the cause of a previous individual request.
+
+## Capture a food photo
+
+Choose **Take a photo**, allow browser camera access, wait for the live preview, then choose **Capture photo**. You can cancel the camera or remove the captured image. Capture creates an in-memory JPEG (maximum long edge 1600 pixels) and applies the same 5 MiB validation as file selection. Nothing is sent to Go/Ollama until you choose **Analyze photo**.
+
+Live camera access needs a supported browser, permission and HTTPS or localhost. Unsupported browsers, denied access and missing devices show errors while retaining the existing file picker. Camera tracks stop on cancel, capture, analysis or unmount; late permission responses are stopped after cancellation. Real hardware/mobile behaviour has not been manually verified in this environment.

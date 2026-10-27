@@ -7,3 +7,5 @@ Fixed Go defaults: `127.0.0.1:8080`, `https://ollama.com/api`, model `gemma4:31b
 `GET /api/health` reports process health; `POST /api/analyze` accepts one JPEG/PNG/WebP multipart `image` at most 5 MiB and validates cloud output. Uploads are never written to disk. No SDK or local runtime is required.
 
 Checks: `gofmt -w .`, `go test ./...`, `go vet ./...`. Tests use synthetic credentials and fake transports, never real keys or credits. See root README and API contract for privacy, limits and setup.
+
+From this directory, use `make run`, `make build`, `make test`, `make vet`, `make fmt`, `make check` (tests + vet), or `make clean`. Plain `make` lists the targets. Override the toolchain when needed with `make GO=/path/to/go check`. The build creates the Git-ignored `server` binary; `make clean` removes it. Run and build use the existing key-only configuration.

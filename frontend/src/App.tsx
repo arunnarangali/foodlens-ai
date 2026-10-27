@@ -3,11 +3,14 @@ import AnalysisResults from "./components/AnalysisResults";
 import ImageUploader from "./components/ImageUploader";
 import { analyzeImage } from "./services/api";
 import type { AnalysisResponse } from "./types/api";
+
 type AnalysisState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "success"; result: AnalysisResponse }
   | { status: "error"; message: string };
+
+
 export default function App() {
   const inFlight = useRef(false);
   const [file, setFile] = useState<File | null>(null);
@@ -17,6 +20,7 @@ export default function App() {
   const result = state.status === "success" ? state.result : null;
   const showError = (message: string) =>
     setState(message ? { status: "error", message } : { status: "idle" });
+
   return (
     <>
       <header>
@@ -34,8 +38,8 @@ export default function App() {
             on your plate.
           </h1>
           <p className="subtitle">
-            Start with a photo. Explore likely
-            ingredients, rough nutrition ranges, and simple preparation ideas.
+            Start with a photo. Explore likely ingredients, rough nutrition
+            ranges, and simple preparation ideas.
           </p>
         </section>
         <div className="workspace">
@@ -55,7 +59,10 @@ export default function App() {
                 inFlight.current = true;
                 setState({ status: "loading" });
                 try {
-                  setState({ status: "success", result: await analyzeImage(file) });
+                  setState({
+                    status: "success",
+                    result: await analyzeImage(file),
+                  });
                 } catch (err) {
                   showError(
                     err instanceof Error
@@ -91,8 +98,9 @@ export default function App() {
               </button>
               <p className="small privacy">
                 Submitting sends your photo to Ollama Cloud for analysis. This
-                app does not save photos. Provider terms and retention policies apply.
-                Cloud usage limits and charges may apply. Avoid sensitive or personal photos.
+                app does not save photos. Provider terms and retention policies
+                apply. Cloud usage limits and charges may apply. Avoid sensitive
+                or personal photos.
               </p>
             </form>
           </section>
@@ -114,7 +122,8 @@ export default function App() {
                     : "A fresh perspective starts here"}
                 </h3>
                 <p>
-                  Choose a photo to explore likely ingredients, approximate nutrition ranges and a basic preparation idea.
+                  Choose a photo to explore likely ingredients, approximate
+                  nutrition ranges and a basic preparation idea.
                 </p>
                 <div className="coming">
                   <span>Likely ingredients</span>
@@ -129,9 +138,9 @@ export default function App() {
           </section>
         </div>
         <aside className="notice">
-          An estimate, always. Results include assumptions and
-          uncertainty. FoodLens is educational and does not provide medical or
-          dietetic advice.
+          An estimate, always. Results include assumptions and uncertainty.
+          FoodLens is educational and does not provide medical or dietetic
+          advice.
         </aside>
       </main>
       <footer>

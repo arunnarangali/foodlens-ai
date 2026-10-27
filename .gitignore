@@ -29,4 +29,3 @@ uploads/
 *.jpeg
 *.png
 *.webp
-!docs/assets/.gitkeep

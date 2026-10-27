@@ -40,3 +40,7 @@ The app uses no SDK, database, local Ollama server, history, authentication for 
 The Go server starts from `backend/`, loads only OLLAMA_API_KEY from `.env` (or an existing exported key), then uses fixed configuration constants. Old environment settings cannot change the cloud destination, model or deadlines. Unsupported assignments in the private file are rejected; secret values are never included in errors.
 
 For each analysis, a bounded authenticated GET /api/tags runs inside the same 120-second deadline before inference. Only the fixed default gemma4:31b is eligible and it must advertise vision and completion. Failure returns a safe error; no alternative model, retry or paid probing call is made. The listing is capability metadata, not proof of free usage or account entitlement.
+
+## Browser camera capture
+
+A small CameraCapture component uses getUserMedia with video only and a preferred rear-facing camera. Capture draws a scaled frame to an in-memory canvas, encodes JPEG and passes a File through ImageUploader's existing type/size validation and object-URL preview. The existing multipart API and analysis submission are unchanged. Camera streams are stopped on capture/cancel/unmount or analysis; stale permission/capture callbacks cannot revive a cancelled session. Permission/support errors retain the file-picker alternative. No photo is automatically uploaded or persisted.

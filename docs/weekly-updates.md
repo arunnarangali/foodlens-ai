@@ -53,3 +53,11 @@ Removed optional configuration variables from active setup and backend reads. On
 ### AI_INVALID_RESPONSE follow-up — 2026-10-27
 
 Added safe backend rejection reasons, complete output prompt templates, and BOM/single-fence compatibility while preserving nutrition checks and public API fields. New backend regressions pass; frontend checks and all 18 tests/build pass. No live response was reproduced, so the user's original provider failure remains unclassified until the new diagnostic is observed. No model fallback, retries, token increases or credential changes.
+
+## Backend Makefile — 2026-10-27
+
+Added backend Makefile and usage documentation. Tests, vet, binary build and cleanup passed through make. No server launch or live AI call performed.
+
+## Camera capture and placeholder cleanup — 2026-10-27
+
+Added live camera capture with permission/error states, JPEG preview through existing validation, and stream cleanup; no automatic upload. Removed 11 .gitkeep markers at user request. Final frontend TypeScript checks, 25 tests and production build pass. No live device/browser or provider test performed.

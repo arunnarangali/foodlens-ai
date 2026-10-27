@@ -107,3 +107,11 @@ A nutrient range must be a JSON object with min and max numeric properties, not 
 ```
 
 The user message and image handling are unchanged. Provider-default thinking remains unchanged because account-specific supported control values were not verified; no unverified parameter or extra paid probe was introduced. Mocked tests verify wrapped success and controlled diagnostic failures. See testing.md for actual commands/results.
+
+## Backend Makefile — 2026-10-27
+
+User requested a Makefile in backend. Added documented help/run/build/test/vet/fmt/check/clean targets with a Go-toolchain override. Verified help, checks, build and cleanup; run/fmt were dry-run only.
+
+## Camera capture and placeholder cleanup — 2026-10-27
+
+User requested frontend photo capture, then removal of all project .gitkeep files. Added live camera/preview/capture/cancel with shared upload validation and cleanup tests. Removed all 11 project marker files and the unused ignore exception. No source files were removed. Checks and hardware limits are recorded in testing.md.
