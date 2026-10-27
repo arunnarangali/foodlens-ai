@@ -1,0 +1,32 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+
+# Dependencies / generated output
+node_modules/
+dist/
+coverage/
+*.test
+*.out
+*.tsbuildinfo
+*.log
+/backend/server
+
+# Go / editor / OS
+vendor/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local media and recordings (do not commit user food images)
+uploads/
+*.heic
+*.jpg
+*.jpeg
+*.png
+*.webp
+!docs/assets/.gitkeep

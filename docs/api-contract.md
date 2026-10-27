@@ -1,0 +1,71 @@
+# API contract — Ollama Cloud milestone
+
+## GET /api/health
+
+Process health only: HTTP 200, `{"status":"ok"}`. This does not assert cloud connectivity, model access or available credits.
+
+## POST /api/analyze
+
+Send multipart/form-data with exactly one file field named `image`. JPEG, PNG and WebP are accepted after content sniffing; filename and browser MIME headers are not trusted. The inclusive image limit is 5 MiB; total multipart body limit is 5 MiB + 64 KiB. Processing stays in bounded memory; no temporary image files are written. Signature validation does not fully decode images.
+
+### Success — HTTP 200
+
+All fields below are required. Types are synchronized in Go and TypeScript.
+
+```json
+{
+  "status": "analyzed",
+  "dishName": "Likely vegetable rice",
+  "identificationConfidence": "medium",
+  "visibleIngredients": ["rice", "peas"],
+  "nutritionEstimate": {
+    "servingAssumption": "One medium bowl",
+    "caloriesKcal": {"min": 200, "max": 500},
+    "proteinGrams": null,
+    "carbohydrateGrams": {"min": 40, "max": 80},
+    "fatGrams": null,
+    "confidence": "low"
+  },
+  "preparationIdea": ["Cook rice with vegetables."],
+  "uncertainties": ["Oil, hidden ingredients and serving size cannot be established from the photo."],
+  "disclaimer": "Nutrition is a rough visual estimate, not a measured value. FoodLens is educational, not medical or dietetic advice."
+}
+```
+
+This example is illustrative test data, not observed model output or nutrition facts.
+
+- `status`: `analyzed | notFoodOrUnclear`.
+- Confidence values: `low | medium | high`.
+- All strings are nonempty where applicable, at most 1000 Unicode characters.
+- `visibleIngredients`: up to 30 likely visible ingredients; uncertain inferences must be labelled. Empty is allowed when ingredients cannot be identified.
+- `nutritionEstimate`: required object for analyzed food. Each of its four nutrient fields is required and either null (unknown) or finite non-negative `{min,max}` with `min <= max`. Serving assumption and confidence are required.
+- `preparationIdea`: 1–5 concise steps for analyzed food.
+- `uncertainties`: 1–10 nonempty strings, including relevant hidden-ingredient and portion limitations.
+- `disclaimer`: always replaced with the server-owned educational disclaimer above.
+
+For `notFoodOrUnclear`, all result fields remain present: use an explanatory `dishName`, low identification confidence, empty ingredients/preparation arrays, `nutritionEstimate: null`, uncertainties requesting a clearer food photo, and the disclaimer. Do not invent food, nutrition or preparation advice.
+
+The backend rejects missing/unknown fields, trailing JSON, invalid ranges/confidences and excessive strings/arrays. Extracted model JSON is limited to 32 KiB; the cloud response envelope to 256 KiB. Prompted JSON is used because Ollama Cloud currently documents structured-output enforcement as unsupported. No automatic repair calls or retries are made.
+
+### Errors
+
+```json
+{"error":{"code":"INVALID_IMAGE","message":"Choose a supported food image."}}
+```
+
+| Condition | Status / code |
+|---|---|
+| Missing, empty, malformed or extra upload parts | 400 BAD_REQUEST or INVALID_IMAGE |
+| Oversized file/request | 413 IMAGE_TOO_LARGE |
+| Unsupported content | 415 UNSUPPORTED_MEDIA_TYPE |
+| Provider authentication, invalid/unavailable model, network/service failures | 503 AI_UNAVAILABLE |
+| Provider 402/payment/quota or 429/rate limit | 429 RATE_LIMITED |
+| Provider deadline or upstream 408/504 | 504 AI_TIMEOUT |
+| Malformed/incomplete/oversized provider output or invalid analysis | 502 AI_INVALID_RESPONSE |
+| Overall processing timeout | 503 REQUEST_TIMEOUT |
+| Wrong HTTP method | 405 METHOD_NOT_ALLOWED, with Allow header |
+| Unknown endpoint | 404 NOT_FOUND |
+
+All API responses use application/json and Cache-Control: no-store. Provider errors and credentials are never returned. Client cancellation propagates to the cloud request.
+
+Provider deadline defaults to 120 seconds (configured 1–180); processing deadline is provider deadline + 15 seconds. Server write deadline is 200 seconds and browser request deadline is 210 seconds. Health behaviour is unchanged; there is no separate readiness endpoint.
