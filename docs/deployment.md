@@ -1,84 +1,82 @@
-# Deploy React and Go together on Render
+# Simple deployment on Render — native Go runtime
 
-## Architecture and current verification
+## One repository, one public URL
 
-One repository, one Docker Web Service, one public HTTPS origin. Go serves the React production build and `/api/*`. GitHub Actions validates the commit; Render builds/runs it after checks pass. GitHub Pages is not used because it cannot run Go.
+React and Go stay in this repository. Render builds the frontend and Go server, then Go serves frontend/dist and the existing `/api/*` endpoints on one HTTPS origin. No Dockerfile, GitHub Actions workflow, deploy hook, extra build script or separate frontend service is required. GitHub Pages cannot run this backend; use Render's actual service URL for the complete app.
 
-Local Go tests/vet, frontend checks/build and workflow YAML/Python syntax checks passed; see testing.md. Docker build/container smoke checks, GitHub Actions execution and an actual Render deployment have **not** been verified in this environment: Docker daemon access was denied. No live inference or account credits were consumed.
+## Render settings
 
-## Files and runtime
+Create a **Web Service**, connect the GitHub repository and use:
 
-- Root `Dockerfile`: Node 22 builds React, Go 1.26 builds a static binary, Alpine 3.23 runs it as UID 10001 with trusted HTTPS certificates.
-- `.dockerignore`: excludes private environment files, Git metadata, dependencies, local media and generated artifacts. Only the server binary and built frontend files are copied from build stages into the final image, alongside base OS/runtime certificates.
-- `.github/workflows/foodlens-ci.yml`: checks PRs, pushes to main and manual runs. No Ollama or deployment secrets are required by CI.
-- `.github/scripts/smoke.py`: checks the homepage, referenced JS/CSS, health, safe API errors and missing/private paths. It makes no POST/inference requests.
+| Setting | Value |
+|---|---|
+| Runtime / Language | Go (native) |
+| Branch | main |
+| Root Directory | Leave empty: repository root |
+| Build Command | `npm --prefix frontend ci && npm --prefix frontend run build && cd backend && go build -o server ./cmd/server` |
+| Start Command | `cd backend && ./server` |
+| Health Check Path | /api/health |
+| Environment secret | OLLAMA_API_KEY, entered privately |
+| Instance type | Free for a learning demo, if available to your account |
+| Auto-Deploy | Off; use manual deployment |
 
-The image working directory is `/app/backend`, with the server there and frontend assets at `/app/frontend/dist`. Go serves only that assets directory. Missing assets/directories return 404; unknown API paths retain JSON errors. No source-directory fallback or directory listing exists.
+Render's native runtime includes node and npm. The project requires Node 20.19+ and Go 1.22+; verify versions in the first build logs. No application credential is needed for compilation. Do not print the real runtime key in logs or put it in frontend settings, source or Git. No private .env is uploaded; configure the key through Render's environment settings. The service supplies PORT automatically, which the app validates and binds on 0.0.0.0. Private local .env files remain key-only.
 
-`.env` still accepts only OLLAMA_API_KEY for local development. Render supplies the infrastructure PORT automatically; the server validates it and binds `0.0.0.0:PORT`. Without PORT, local binding stays `127.0.0.1:8080`. Do not add PORT to the private .env. Other provider/model settings stay fixed.
+Leave Root Directory empty so both frontend and backend are available during the build. The start command must change into backend: the app serves `../frontend/dist` relative to that working directory. npm ci uses the committed frontend lockfile.
 
-## Verify Docker locally when daemon access is available
+If you already created a Docker service, create a replacement native Go service with these settings; do not assume deleting the Dockerfile changes an existing service's configured runtime. Keep the previous service until the replacement is verified, then manage the old service in Render yourself. This repository change does not modify your account or running services.
+
+## Manual deployment
+
+1. Run the checks below and push the reviewed commit to GitHub.
+2. Create the native Go service, or select **Manual Deploy → Deploy latest commit** on an existing correctly configured service. Initial service creation may start its first deployment automatically.
+3. Wait for the build and health check to succeed. Render then displays the real HTTPS URL; do not invent or assume one.
+4. For subsequent releases, run tests locally, push changes and deliberately deploy the latest intended commit. There is no CI gate after workflow removal.
+
+## Local build and checks
 
 Run from the repository root:
 
 ```bash
-docker build --tag foodlens-ai .
-docker run --rm --name foodlens-ai \
-  --publish 127.0.0.1:8080:10000 \
-  --env-file backend/.env \
-  foodlens-ai
+npm --prefix frontend ci
+npm --prefix frontend run lint
+npm --prefix frontend test
+npm --prefix frontend run build
 ```
 
-In another terminal:
+Then:
 
 ```bash
-python3 .github/scripts/smoke.py http://127.0.0.1:8080
+cd backend
+go test ./...
+go vet ./...
+go build -o server ./cmd/server
+# For a local combined frontend/API preview, configure the private key first:
+./server
 ```
 
-These are instructions, not evidence of a successful container run here. Use a permitted non-sensitive photo for the separate live AI test after checking Ollama usage/billing. The private .env is passed at runtime and must never be copied into an image or supplied as a build argument.
+The backend Makefile remains available. For separate local development, continue using Go and Vite as described in README. Local bind defaults to 127.0.0.1:8080 when no platform PORT exists.
 
-## Connect Render
+## Verify the actual hosted app
 
-1. Push the reviewable changes to GitHub. Confirm **FoodLens CI / Test and validate deployment** passes.
-2. In Render, choose **New → Web Service → Git Provider**. Connect the GitHub repository through the provider integration rather than an unauthenticated public-repo URL, so Render can observe CI checks.
-3. Set these values:
+- Open the Render URL and confirm the page and its JS/CSS load.
+- Request `https://YOUR-ACTUAL-SERVICE.onrender.com/api/health`; expect `{"status":"ok"}`. Health checks do not call Ollama or prove account quota/model access.
+- Request an unknown API route; expect a JSON 404, not the frontend HTML.
+- Confirm missing assets/private paths do not expose files or directory listings.
+- Use one permitted non-sensitive photo to verify preview, analysis, ranges/unknowns, uncertainty and copy. Camera capture needs browser permission and HTTPS. Check Ollama allowance/billing before submitting.
+- Verify browser analysis requests go to the same origin's Go API; never directly to Ollama. Record the deployed commit, actual URL and test outcomes without keys or private photos.
 
-| Setting | Value |
-|---|---|
-| Name | foodlens-ai, or another available service name |
-| Runtime / language | Docker |
-| Branch | main |
-| Root Directory | Leave empty: repository root |
-| Dockerfile Path | ./Dockerfile |
-| Docker Build Context | Repository root |
-| Health Check Path | /api/health |
-| Instance type | Free for the learning demo, if available to the account |
-| Environment secret | OLLAMA_API_KEY, entered privately in Render |
-| Auto-Deploy | After CI Checks Pass |
+No actual Render deployment or live inference was performed by this cleanup. The former Docker/CI setup is historical and has been removed at the user's request; earlier workflow success does not deploy the new native service.
 
-Do not set separate backend/frontend root directories: both trees are required by the Docker build. Do not add the real key to GitHub Actions secrets for this workflow, a Docker ARG/ENV instruction, frontend settings, logs or Git. The key is needed by the running service only. Render's supplied PORT needs no custom setup.
+## Limits
 
-The first service creation may trigger an initial deployment before you have adjusted every setting. Run CI successfully on the intended main commit before creating the service; then ensure **After CI Checks Pass** is selected before subsequent pushes. Configure `/api/health` in the service's health-check settings if it is not available in the creation form. No deploy hook is needed.
+Render documents idle sleeping/cold starts and usage limits for Free services. Free hosting does not imply free Ollama inference. Public visitors can consume the service's provider allowance; this MVP has no user authentication or abuse-rate limiting. Use account budgets/limits where available and a limited demo audience before sharing widely.
 
-## Confirm the hosted service
+## References
 
-1. Use Render's actual HTTPS URL, not localhost or a guessed service name.
-2. Run `python3 .github/scripts/smoke.py https://YOUR-SERVICE.onrender.com --timeout 120`. This checks hosting without consuming AI inference credits.
-3. Verify upload/preview/removal, camera permission/capture on a supported HTTPS browser, analysis, unknown nutrients, uncertainty/disclaimer and copy. Verify the browser calls the same origin's `/api/analyze` and never Ollama directly.
-4. Check service logs and usage without exposing credentials, private photos or raw model output. Record the deployed commit, actual URL, test outcomes and unresolved issues in testing.md/weekly-updates.md.
-5. If deployment fails, inspect the failed CI/build/health step. Use Render's deploy history to roll back to a known-good deploy where available. Health reports process status, not provider quota/model readiness.
-
-Do not claim public availability or a successful live result until these steps actually pass.
-
-## Limits and cost
-
-Render documents that Free web services can sleep after 15 minutes of inactivity and take about a minute to wake; bandwidth, build minutes and service hours are limited. Free hosting does not make Ollama inference free. Check both accounts' current usage/billing before publishing. The app has no user authentication or public abuse-rate limiting: public visitors can consume your Ollama allowance. Use a limited demo audience and provider-side budgets/limits where available before broad sharing.
-
-## Official references checked 2026-10-27
-
-- GitHub Pages is static hosting: https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages
-- Render port binding and web services: https://render.com/docs/web-services#port-binding
-- Deploy after GitHub checks pass: https://render.com/docs/deploys#integrating-with-ci
-- Repository root/build context: https://render.com/docs/monorepo-support
-- Free service limitations: https://render.com/docs/free
-- GitHub workflow syntax: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+- Native runtime tools (including Node/npm): https://render.com/docs/native-runtimes
+- Supported languages: https://render.com/docs/language-support
+- Native runtime versus Docker: https://render.com/docs/docker
+- Port binding: https://render.com/docs/web-services#port-binding
+- Manual deploys: https://render.com/docs/deploys#manual-deploys
+- Free service limits: https://render.com/docs/free

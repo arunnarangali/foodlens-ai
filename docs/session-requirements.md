@@ -32,6 +32,10 @@ Never mark the entire project complete just because the document exists. Disting
 
 Source now includes the direct cloud HTTP adapter, Go/TypeScript schema, validation, result/copy flow and mock-based tests. See testing.md for actual results; not all planning-table items are complete. Hosted `gemma4:31b` vision is publicly listed, but account access/quota and a live image call remain unverified. No deployment, GitHub publication, commit/PR, screenshots, deck or demo recording is claimed. Native web references were used; no MCP server/plugin or multi-agent runtime was used. Model settings, prompt history, challenges, privacy and context handoff reflect this milestone.
 
-## Deployment preparation evidence — 2026-10-27
+## Historical Docker/CI deployment preparation evidence — 2026-10-27
 
 Root Dockerfile, context exclusions, Go static hosting and platform-port handling, GitHub Actions CI and a smoke helper are implemented. Local tests pass, but Docker daemon access is denied and GitHub/Render live runs have not occurred. No actual public URL, deployment screenshot or successful hosted AI inference is claimed. See deployment.md and testing.md.
+
+## Current deployment simplification — 2026-10-27
+
+The Docker/CI artifacts were removed by request; their earlier preparation record is historical. Native Render settings and direct build/start instructions are documented in deployment.md. Go static hosting/PORT support, Makefile and tests remain. No native service, public URL, screenshot or successful live inference is claimed from this cleanup.

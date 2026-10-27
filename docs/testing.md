@@ -149,7 +149,7 @@ Documentation-only validation: `python3 /tmp/foodlens-history-check.py` checked 
 
 Result: both documentation checks returned exit 0; the checker verified 27 local file/heading links. No missing links, duplicate task IDs, prompt mismatch or whitespace errors were found.
 
-## Single-service deployment — 2026-10-27
+## Historical single-service deployment — 2026-10-27
 
 Actual commands and outcomes:
 
@@ -171,8 +171,21 @@ Two initial helper commands used root-relative paths from backend and failed; pa
 
 Final deployment-documentation checks: workflow YAML, each CI shell step (`bash -n`), Python syntax, required Docker exclusion/non-root/no-build-secret declarations, 15 sequential history IDs and local file targets passed. A tracked-private-env/frontend-key-reference scan passed. These static declaration checks are not Docker runtime or GitHub Actions execution. Final `git diff --check` returned exit 0.
 
-## Workflow filename follow-up — 2026-10-27
+## Historical workflow filename follow-up — 2026-10-27
 
 Workflow rename only: verified the new file exists, old path is absent, contents are byte-for-byte identical to the pre-rename file, and YAML parses successfully. The deployment record now identifies the current workflow path and notes that its original check preceded the rename. No application tests rerun for the filename-only change.
 
 Related-reference audit: active README, deployment instructions, prompt-history link and testing references use .github/workflows/foodlens-ci.yml. Verified referenced workflow paths exist and no obsolete workflow-path reference remains. Historical rename descriptions retain the old filename as narrative only.
+
+## Native-runtime deployment simplification — 2026-10-27
+
+Exact commands/results for this cleanup:
+
+- In backend: `GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go test ./... && GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go vet ./... && GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go build -o /tmp/foodlens-native-server ./cmd/server` — exit 0; ai/api/config/food/web passed; vet and binary compilation passed.
+- At root: `npm --prefix frontend run lint && npm --prefix frontend test && npm --prefix frontend run build` — exit 0; TypeScript, all 25 tests in two files, and 31-module Vite build passed.
+- The native frontend-build and Go-compile portions were verified locally using installed dependencies and the standalone Go executable. `npm ci` was not rerun; no claim is made that Render's fresh dependency install or hosted native environment was exercised.
+- `git diff --check` and removed-file/reference checks are recorded after final documentation validation. No new tests were needed for deleting workflow/container files; existing routing/port/application tests remain.
+
+Docker/CI results above are explicitly historical. This cleanup made no provider request, account modification, public deployment or real camera test.
+
+Final cleanup validation passed: all four requested deployment files are absent; no workflow YAML remains; the issue template/Makefile and active local links are preserved; 16 history IDs and native manual-deployment instructions checked. Final `git diff --check` returned exit 0. Unrelated presentation files were preserved.

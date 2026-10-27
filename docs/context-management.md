@@ -44,6 +44,10 @@ The user superseded earlier provider plans with direct hosted Ollama API integra
 
 Public hosted `gemma4:31b` vision listing verified; no backend API key/account usage was available for a real request. Cloud structured outputs are unsupported per official docs; user selected prompted JSON with strict validation. See testing.md for exact verification and prompt-history.md for the runtime prompt. No context compaction event has been performed or claimed in this milestone; this is a written handoff, not a compaction log entry.
 
-## Deployment handoff — 2026-10-27
+## Historical Docker/CI deployment handoff — 2026-10-27
 
 The user selected one Render Docker Web Service instead of GitHub Pages plus a separate API and requested implementation. Added static hosting under the existing Go server, platform PORT support, Docker build and GitHub Actions validation/smoke script. Local Go/frontend checks pass; Docker daemon access is denied, so container/CI/hosted validation remains outstanding. Render account linkage, runtime key and CI-gated deploy setup are manual steps in deployment.md. No actual deployment or context compaction was performed in this milestone.
+
+## Current simplified deployment handoff — 2026-10-27
+
+The user requested removing the GitHub workflow and Docker to avoid unnecessary complexity. Those files and the CI-only smoke helper were deleted. Active hosting uses Render's native Go runtime, a root command to build React and Go, and `cd backend && ./server` to start. Retain Go static routing, platform PORT, key-only setup, Makefile and application tests. No real service/account or deployment was changed. See deployment.md and the latest testing record; earlier Docker/CI evidence remains historical.

@@ -75,10 +75,14 @@ Consolidated docs/prompt-history.md into 14 chronological request/feature entrie
 - Verified all backend and frontend tests continue to pass (Go test suites 100% pass, Vitest 25/25 pass).
 
 
-## Single-service deployment — 2026-10-27
+## Historical single-service deployment — 2026-10-27
 
 Prepared Go static hosting, Render PORT handling, a multi-stage non-root Docker runtime, read-only GitHub Actions checks and a no-inference container smoke script. Local Go checks/build and frontend TypeScript/25 tests/build pass. Workflow/Python syntax and built-asset simulated checks pass. Docker build is blocked by daemon permissions; GitHub Actions and Render deployment have not run. No key exposed, account changed or live inference performed. Follow deployment.md to finish hosting and record actual evidence.
 
-## Workflow filename follow-up — 2026-10-27
+## Historical workflow filename follow-up — 2026-10-27
 
 Renamed the workflow to .github/workflows/foodlens-ci.yml. Contents are unchanged; deployment instructions and links now use the new path.
+
+## Native-runtime deployment simplification — 2026-10-27
+
+Removed Dockerfile, .dockerignore, the GitHub Actions workflow and the CI-only smoke script. Current hosting instructions use one native Render Go service with direct frontend/Go build commands and manual deployment (Auto-Deploy Off). Local backend tests/vet/compile and frontend TypeScript/25 tests/build pass. No application feature or secret changed; actual Render deployment remains outstanding.

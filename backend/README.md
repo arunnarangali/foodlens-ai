@@ -12,4 +12,6 @@ From this directory, use `make run`, `make build`, `make test`, `make vet`, `mak
 
 ## Hosted/static frontend
 
-The server also serves `../frontend/dist` when built, while `/api/*` retains the JSON API. Build the frontend first to inspect it through Go; Vite development remains unchanged. Production uses the root Dockerfile with assets at `/app/frontend/dist` and the binary working directory `/app/backend`. Render's automatically supplied PORT changes the bind address to 0.0.0.0:PORT; local default remains 127.0.0.1:8080. PORT is infrastructure metadata, not a new private .env setting. See `../docs/deployment.md` for CI and account setup; the container has not run successfully in this restricted environment.
+The server also serves `../frontend/dist` when built, while `/api/*` retains the JSON API. Build React from the repository root with `npm --prefix frontend ci && npm --prefix frontend run build`, then compile/run Go from backend. Local Vite development remains unchanged.
+
+Render uses its native Go runtime with repository-root build/start commands documented in `../docs/deployment.md`; Docker and GitHub Actions are not needed. Start from backend so static assets and private local .env resolve correctly. Render supplies PORT automatically for public binding; it is infrastructure metadata, not a private .env setting. Keep only OLLAMA_API_KEY in private configuration. Actual hosted deployment remains unverified.

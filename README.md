@@ -88,7 +88,7 @@ npm test
 npm run build
 ```
 
-The lint script checks TypeScript; ESLint is not configured. Tests use synthetic fixtures and mock cloud transport, not real credentials. `npm run preview` inspects the static build and does not proxy the API. The root Dockerfile now builds and serves both frontend and Go API on the same origin. Follow the [Render deployment guide](docs/deployment.md) for GitHub Actions checks and one hosted web service. Actual Docker/CI/Render execution remains unverified locally because Docker daemon access is denied.
+The lint script checks TypeScript; ESLint is not configured. Tests use synthetic fixtures and mock cloud transport, not real credentials. `npm run preview` inspects the static build and does not proxy the API. Go can serve the built frontend and API on the same origin. Follow the [native Render deployment guide](docs/deployment.md) for one hosted Go service. Hosting uses direct build/start commands; no Docker or GitHub Actions workflow is required. Actual Render deployment remains unverified.
 
 ## Privacy and limitations
 
@@ -116,4 +116,4 @@ Live camera access needs a supported browser, permission and HTTPS or localhost.
 
 ## One-service hosting
 
-GitHub stores the monorepo and runs `.github/workflows/foodlens-ci.yml`; Render runs one Docker Web Service serving the frontend and Go API together. No GitHub Pages deployment, separate frontend API URL or CORS setup is required. Put the real OLLAMA_API_KEY only in Render's runtime environment. CI uses a synthetic key for static/health checks and never calls the AI provider. See [deployment setup and verification](docs/deployment.md).
+Keep frontend and backend in this GitHub repository and run them together on Render's native Go runtime. Render builds React with npm, compiles Go and starts the Go server, which serves both the frontend and API. No separate frontend API URL or CORS setup is needed. Set only OLLAMA_API_KEY privately in Render and deploy manually with Auto-Deploy Off. See [deployment instructions](docs/deployment.md).

@@ -19,7 +19,7 @@ Coding assistant: Codex; exact coding-model identifier not recorded. Native web 
 | Backend development Makefile | Checks/build/cleanup verified; run/fmt dry-run only | H-011 |
 | Camera capture and stream cleanup | Implemented; 25 frontend tests last recorded after camera work | H-012 |
 | Ignore rules and marker cleanup | Implemented; 11 marker files removed | H-003, H-013 |
-| Single-service deployment and CI | Source/config prepared; Docker/CI/Render execution unverified | H-015 |
+| Native single-service deployment | Instructions prepared; live Render verification outstanding; Docker/CI removed | H-015, H-016 |
 | Gemini and local Ollama inference | Historical attempts/proposals only; inactive | H-004, H-005 |
 
 No user accounts, database, image/result persistence, result history, RAG, model downloads or deployment were delivered in these milestones. The feature summary reflects inspected source and recorded work, not a claim of a successful live demo.
@@ -220,13 +220,26 @@ No user accounts, database, image/result persistence, result history, RAG, model
 
 > beacuse it has backe end and front end in sme repo so how id with git huba ction
 
-**Status:** deployment code/configuration prepared; live container, CI and Render deployment unverified.
+**Status:** historical Docker/CI preparation, superseded and removed in H-016; Go static serving and PORT support retained.
 
 - Inspected .github and existing Vite/Go setup. Explained static Pages versus an executable backend. User selected **One hosted app** on Render, then said “proceed with above plan”.
 - Added Go static-file routing, unchanged JSON API paths, validated infrastructure PORT, root multi-stage Docker build, context exclusions, a read-only GitHub Actions workflow and credential-free container smoke checks. Existing private setup remains key-only.
 - Kept local development and same-origin frontend API calls; no separate frontend host, CORS, user auth, model change or provider call added.
 - Local Go tests/vet/build and frontend TypeScript/25 tests/build pass. Workflow/Python syntax and an asset-aware simulated smoke check pass. Docker CLI cannot access the daemon, so a Docker build/container run is not claimed. No Render account/service or live URL was configured.
-- **Evidence:** [deployment instructions](deployment.md), [actual verification](testing.md#single-service-deployment--2026-10-27), [workflow](../.github/workflows/foodlens-ci.yml).
+- **Evidence:** [deployment instructions](deployment.md), [actual verification](testing.md#historical-single-service-deployment--2026-10-27). The workflow was later removed (H-016).
+
+### H-016 — Remove Docker and GitHub Actions; simplify hosting
+
+**Date:** 2026-10-27
+
+> dont wnat over engneering stuff
+
+**Status:** cleanup implemented after the simplified native-runtime plan and “Implement the plan.”
+
+- User requested removal of the GitHub workflow, then Docker if unnecessary. Deleted Dockerfile, .dockerignore, the workflow and its CI-only smoke helper. Kept the issue template, Go static/API routing, platform PORT support, key-only configuration, backend Makefile and application tests.
+- Replaced active instructions with one native Render Go service, direct npm/Go build commands, backend working directory, runtime key and manual deployment (Auto-Deploy Off). No new framework or deployment script added.
+- Historical Docker/CI checks are retained as past evidence, not current prerequisites. No account/running service changed and no real deployment performed.
+- **Evidence:** [native hosting instructions](deployment.md), [cleanup verification](testing.md#native-runtime-deployment-simplification--2026-10-27).
 
 ## Runtime food-analysis prompt versions
 

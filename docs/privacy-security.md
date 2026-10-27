@@ -25,8 +25,8 @@ API errors use controlled messages, application/json and no-store. Health report
 
 Automated tests cover auth/header formation with synthetic keys, redirect rejection, safe errors, response limits, cancellation and invalid output. See testing.md for actual results and repository checks. No real key was available for live inference. Do not treat mock success as a live security or model-quality certification. Inspect staged changes and history before publishing; revoke/rotate a real key if it is ever exposed.
 
-## Deployment controls
+## Deployment controls — native runtime
 
-Private env files, Git metadata and local media are excluded from Docker context; final-stage COPY includes only the server and built assets. The runtime uses non-root UID 10001 and CA certificates; no key build argument or compiled frontend secret exists. Render's runtime key remains private. The static handler exposes only frontend/dist and never lists directories or serves hidden files. No CORS broadening is needed because frontend and API share an HTTPS origin.
+Render runs the Go service natively and receives OLLAMA_API_KEY privately in its runtime settings. Do not commit/upload a private .env or expose credentials in the React build or logs. No Docker image, build argument or GitHub Actions deployment secret is used. Platform PORT is supplied automatically and is not added to .env.
 
-Public visitors can invoke the analysis endpoint using the service's provider allowance; this MVP does not add user authentication or abuse controls. Check provider-side budgets/limits and restrict the demo audience before broad sharing. Container non-root/file-exclusion checks are written in CI but not locally executed because Docker daemon access is denied. Do not confuse static source review with a verified deployment.
+The static handler exposes only frontend/dist and never lists directories or serves hidden files. Frontend/API share an HTTPS origin, so no broad CORS change is required. Public visitors can consume the service's Ollama allowance; this MVP adds no user authentication or abuse controls. Check account budgets/limits and restrict the audience before broad sharing. Test locally before each manual deploy; no CI gate remains. Native hosting and live inference remain unverified here.

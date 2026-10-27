@@ -44,6 +44,6 @@ Run the existing baseline checks before changing code; this session's baseline p
 
 Use `go test ./...`, `go vet ./...`, frontend TypeScript checks, Vitest and production build. If the system Go launcher fails, use the installed standalone toolchain and a writable GOCACHE as recorded in testing.md. Do not alter system services or install a local runtime. Keep evidence factual and preserve user staging; this session creates no commit or deployment.
 
-## Deployment pipeline — 2026-10-27
+## Deployment workflow — native runtime
 
-The CI workflow runs on pull requests, main pushes and manual dispatch, with contents:read only and no provider secret. Frontend checks/build and Go formatting/tests/vet precede Docker build/smoke. Render should be connected to GitHub main with After CI Checks Pass; the running service alone receives the Ollama key. See deployment.md for initial setup and actual verification limits.
+Run frontend TypeScript/tests/build and Go tests/vet locally, then push the reviewed commit. Use one Render native Go Web Service with the repository-root build and backend start commands in deployment.md. Auto-Deploy is Off: deploy manually after checks pass. The workflow file, Docker configuration and automated smoke helper were removed at the user's request. No replacement automation or extra framework is introduced.

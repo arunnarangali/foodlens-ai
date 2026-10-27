@@ -39,6 +39,10 @@ This session implements the skeleton and upload validation only. API paths are `
 
 Use Ollama Cloud with a backend Bearer key and publicly listed vision model. No local inference or model downloads. Finish mock-tested analysis, copy and safe errors even when account access is unavailable; clearly separate that work from a live smoke test. Cloud format enforcement is currently unsupported: prompt JSON and strictly validate. No history, SDK, database or unrelated features.
 
-## Explicit hosting follow-up — 2026-10-27
+## Historical Docker/CI hosting follow-up — 2026-10-27
 
 The user subsequently authorized a single hosted frontend/API service with GitHub Actions. Deployment preparation is now an explicit follow-up to the original one-day scope guard. See deployment.md; actual container/CI/Render deployment remains unverified, rather than being counted as completed day-one evidence.
+
+## Current simplified hosting follow-up — 2026-10-27
+
+The user superseded Docker/CI deployment with one native Render Go service and manual deployment. Use direct npm/Go build commands; no Docker, workflow, deploy hook or extra script is needed. Preserve runtime PORT support and key-only private configuration. Actual hosted verification is still outstanding.

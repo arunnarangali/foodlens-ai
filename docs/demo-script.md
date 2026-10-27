@@ -33,4 +33,4 @@ Use `gemma4:31b` only after checking account access/credits; public model listin
 
 ## Hosted demo alternative — 2026-10-27
 
-After deployment is actually verified, use the Render HTTPS URL for a one-origin demo. Run the no-inference smoke helper first, allow for a free-service cold start and confirm provider allowance before submitting a permitted photo. Current session prepared this path but did not deploy it. Follow deployment.md; do not present the local simulated smoke result as a live cloud deployment.
+After deployment is actually verified, use the Render HTTPS URL for a one-origin demo. Check the homepage/assets and GET /api/health first, allow for a free-service cold start and confirm provider allowance before submitting a permitted photo. Current session prepared this path but did not deploy it. Follow deployment.md; do not present the local simulated smoke result as a live cloud deployment.
