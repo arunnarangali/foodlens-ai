@@ -140,7 +140,7 @@ func TestProviderErrors(t *testing.T) {
 	for _, tc := range []struct {
 		code   string
 		status int
-	}{{"RATE_LIMITED", 429}, {"AI_UNAVAILABLE", 503}, {"AI_TIMEOUT", 504}, {"AI_INVALID_RESPONSE", 502}, {"private-key", 503}} {
+	}{{"RATE_LIMITED", 429}, {"AI_UNAVAILABLE", 503}, {"AI_MODEL_UNAVAILABLE", 503}, {"AI_TIMEOUT", 504}, {"AI_INVALID_RESPONSE", 502}, {"private-key", 503}} {
 		t.Run(tc.code, func(t *testing.T) {
 			called := false
 			handler := NewHandler(fakeAnalyzer{run: func(ctx context.Context, data []byte, mime string) (food.Result, error) {

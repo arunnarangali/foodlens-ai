@@ -14,7 +14,7 @@ Build FoodLens AI as a safe, small, one-day MVP. Prefer a working end-to-end pat
 - Use Ollama Cloud only via Go standard HTTP at `https://ollama.com/api/chat`; no local inference, cloud SDK or alternate provider.
 - Read `OLLAMA_API_KEY` only in the backend environment; never expose Bearer headers or credentials.
 - Call the AI provider only from the backend. Never place provider secrets in frontend code or Vite variables.
-- Use environment variables for configuration; `.env.example` must contain placeholders only.
+- Only OLLAMA_API_KEY is configurable, through the private backend .env (loaded explicitly) or backend environment. All other runtime settings are fixed Go defaults; `.env.example` must contain only the key placeholder.
 - Validate upload size and actual content type; accept only the explicit allowlist implemented by the team (planned: JPEG, PNG, WebP; 5 MiB maximum).
 - Apply request and provider timeouts. Avoid logging raw images, secrets, or full user payloads.
 - Do not write uploaded images to disk. Do not persist image bytes in browser history.

@@ -8,8 +8,10 @@ import (
 	"errors"
 	"foodlens/backend/internal/food"
 	"io"
+	"log"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -19,6 +21,8 @@ type Ollama struct {
 	client               *http.Client
 	endpoint, key, model string
 	timeout              time.Duration
+	discovery            bool
+	allowedModels        []string
 }
 
 // New creates the hosted client. Configuration validation is owned by config.Load.
@@ -52,7 +56,15 @@ func (o *Ollama) Analyze(ctx context.Context, image []byte, _ string) (food.Resu
 	ctx, cancel := context.WithTimeout(ctx, o.timeout)
 
 	defer cancel()
-	payload := chatRequest{Model: o.model, Messages: []chatMessage{{Role: "system", Content: Prompt}, {Role: "user", Content: "Analyze this food photo. Return only the required JSON object.", Images: []string{base64.StdEncoding.EncodeToString(image)}}}, Stream: false}
+	model := o.model
+	if o.discovery {
+		var err error
+		model, err = o.selectModel(ctx)
+		if err != nil {
+			return food.Result{}, err
+		}
+	}
+	payload := chatRequest{Model: model, Messages: []chatMessage{{Role: "system", Content: Prompt}, {Role: "user", Content: "Analyze this food photo. Return only the required JSON object.", Images: []string{base64.StdEncoding.EncodeToString(image)}}}, Stream: false}
 	payload.Options.NumPredict = 4096
 	body, err := json.Marshal(payload)
 	if err != nil {
@@ -83,7 +95,7 @@ func (o *Ollama) Analyze(ctx context.Context, image []byte, _ string) (food.Resu
 		return transportFailure(ctx, err)
 	}
 	if len(data) > MaxEnvelopeBytes {
-		return failure("AI_INVALID_RESPONSE")
+		return o.invalidResponse(model, "output_too_large", "", len(data))
 	}
 	var envelope struct {
 		Message    *chatMessage `json:"message"`
@@ -92,14 +104,30 @@ func (o *Ollama) Analyze(ctx context.Context, image []byte, _ string) (food.Resu
 		Error      string       `json:"error"`
 	}
 	if err := json.Unmarshal(data, &envelope); err != nil {
-		return failure("AI_INVALID_RESPONSE")
+		return o.invalidResponse(model, "invalid_envelope", "", len(data))
 	}
-	if envelope.Error != "" || !envelope.Done || envelope.DoneReason != "stop" || envelope.Message == nil || envelope.Message.Role != "assistant" || len(envelope.Message.Content) == 0 {
-		return failure("AI_INVALID_RESPONSE")
+	if envelope.Error != "" {
+		return o.invalidResponse(model, "invalid_envelope", "", len(data))
+	}
+	if envelope.DoneReason == "length" {
+		return o.invalidResponse(model, "output_truncated", "", len(data))
+	}
+	if !envelope.Done {
+		return o.invalidResponse(model, "incomplete_response", "", len(data))
+	}
+	if envelope.DoneReason != "stop" || envelope.Message == nil || envelope.Message.Role != "assistant" {
+		return o.invalidResponse(model, "invalid_envelope", "", len(data))
+	}
+	if strings.TrimSpace(envelope.Message.Content) == "" {
+		return o.invalidResponse(model, "empty_content", "", len(data))
 	}
 	result, err := food.Parse([]byte(envelope.Message.Content))
 	if err != nil {
-		return failure("AI_INVALID_RESPONSE")
+		var validation *food.ValidationError
+		if errors.As(err, &validation) {
+			return o.invalidResponse(model, validation.Reason, validation.Field, len(data))
+		}
+		return o.invalidResponse(model, "invalid_json", "", len(data))
 	}
 	return result, nil
 }
@@ -113,4 +141,10 @@ func transportFailure(ctx context.Context, err error) (food.Result, error) {
 		return failure("AI_TIMEOUT")
 	}
 	return failure("AI_UNAVAILABLE")
+}
+
+func (o *Ollama) invalidResponse(model, reason, field string, size int) (food.Result, error) {
+	// Never include raw decoder errors, provider messages, image bytes or credentials.
+	log.Printf("foodlens_ai_response_rejected model=%q reason=%q field=%q response_bytes=%d", model, reason, field, size)
+	return failure("AI_INVALID_RESPONSE")
 }

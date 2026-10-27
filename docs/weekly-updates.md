@@ -45,3 +45,11 @@ Added ignore rules for TypeScript build metadata, logs and `/backend/server`. Ve
 - Tests: exact commands/counts are recorded in testing.md; fixtures are synthetic and consume no credits.
 - Documentation: current runtime references, setup, privacy, skill, prompt, model settings, workflow/demo guidance and context handoff updated. Earlier provider planning is clearly historical where retained.
 - No compaction, MCP/plugin integration, sub-agents, commit, publication, screenshot or demo recording performed in this milestone.
+
+### Key-only configuration follow-up — 2026-10-27
+
+Removed optional configuration variables from active setup and backend reads. Only OLLAMA_API_KEY remains; fixed Go defaults and default-model capability discovery preserve the analysis flow. Updated key-only loading/config tests and documentation. No real credential, live-provider output, billing entitlement, commit or deployment is claimed. See testing.md for actual commands/results.
+
+### AI_INVALID_RESPONSE follow-up — 2026-10-27
+
+Added safe backend rejection reasons, complete output prompt templates, and BOM/single-fence compatibility while preserving nutrition checks and public API fields. New backend regressions pass; frontend checks and all 18 tests/build pass. No live response was reproduced, so the user's original provider failure remains unclassified until the new diagnostic is observed. No model fallback, retries, token increases or credential changes.

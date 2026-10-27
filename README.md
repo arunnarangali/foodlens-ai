@@ -30,21 +30,24 @@ The browser calls Go only. See [architecture](docs/architecture.md) and [API con
 
 ## Secure backend setup
 
-Create a key in [Ollama settings](https://ollama.com/settings/keys). In a **bash** terminal:
+Create a key in [Ollama settings](https://ollama.com/settings/keys). Open the private `backend/.env` and set its **only** variable locally:
+
+```dotenv
+OLLAMA_API_KEY=replace_with_your_ollama_api_key
+```
+
+Replace the placeholder with your key in that private file; do not paste it into chat, frontend code or Git. `.env.example` contains the same single placeholder assignment. The server explicitly loads `.env` when started from the backend directory:
 
 ```bash
-# Read privately; do not put a real key in source or a shell command/history.
-read -r -s -p "Ollama API key: " OLLAMA_API_KEY
-export OLLAMA_API_KEY
-export OLLAMA_BASE_URL=https://ollama.com/api
-export OLLAMA_MODEL=gemma4:31b
-export OLLAMA_TIMEOUT_SECONDS=120
-export SERVER_ADDR=127.0.0.1:8080
 cd backend
 go run ./cmd/server
 ```
 
-`.env.example` contains placeholders only. **Go does not automatically load .env files.** Replace example values and export variables in the backend terminal; do not export literal placeholders. Key and model are required. Address/base URL/timeout default to the values above. Timeout accepts 1–180 seconds. Only the hosted HTTPS Ollama URL is allowed. Never put the key in React or `VITE_*` variables; never print it or run credential-bearing commands with shell tracing.
+Alternatively, privately export `OLLAMA_API_KEY` in the backend terminal; an exported value takes precedence over the file. The loader supports plain or quoted literal values and comments, performs no shell expansion, and rejects other settings without printing their values.
+
+All other settings are fixed in Go: server `127.0.0.1:8080`, cloud API `https://ollama.com/api`, default vision model `gemma4:31b`, and inference timeout 120 seconds. Old address/model/timeout environment variables are ignored; remove them from private files. Before each analysis, the backend checks the hosted listing for the default model's vision and completion capabilities. If it is unavailable, inference stops safely without switching models. No additional setup variables are needed.
+
+Model discovery does **not** detect free eligibility or account balance. Your Ollama account controls whether requests are covered by an allowance or billed. FoodLens makes no automatic model fallback or retry after quota/payment failures. No live account access or free inference has been verified here.
 
 Health check:
 
@@ -65,9 +68,9 @@ npm ci
 npm run dev
 ```
 
-Open the URL Vite prints, normally `http://127.0.0.1:5173`. The development proxy forwards `/api` to `http://127.0.0.1:8080`; update it if you deliberately change the backend port. Select a JPEG, PNG or WebP file up to 5 MiB, inspect the preview and choose **Analyze photo**. Inspect the ranges, assumptions and uncertainty; copy the result if useful. Unknown nutrients display as **Unknown**. Unclear/non-food photos receive a request for a clearer photo without invented preparation or nutrition advice.
+Open the URL Vite prints, normally `http://127.0.0.1:5173`. The development proxy forwards `/api` to `http://127.0.0.1:8080`; the backend address is fixed in Go. Select a JPEG, PNG or WebP file up to 5 MiB, inspect the preview and choose **Analyze photo**. Inspect the ranges, assumptions and uncertainty; copy the result if useful. Unknown nutrients display as **Unknown**. Unclear/non-food photos receive a request for a clearer photo without invented preparation or nutrition advice.
 
-Inference defaults to a 120-second deadline. Overall server timeout is provider timeout + 15 seconds, write deadline 200 seconds and browser abort 210 seconds. No automatic retries or repair calls are made. Errors allow a deliberate manual retry.
+Inference defaults to a 120-second deadline. Overall server timeout is 135 seconds, write deadline 200 seconds and browser abort 210 seconds. No automatic retries or repair calls are made. Errors allow a deliberate manual retry.
 
 ## Verification and build
 
@@ -98,3 +101,7 @@ Ollama currently documents [cloud structured outputs as unsupported](https://doc
 ## Project documentation
 
 The `docs/` directory contains the API contract, architecture, model settings, exact prompt history, context handoff, actual challenges/test records, security review, workflow, weekly updates and demo/presentation outlines. Templates or old records are explicitly historical; they do not constitute live demo evidence.
+
+## Troubleshooting AI_INVALID_RESPONSE
+
+Restart Go after code updates. Valid JSON enclosed in one Markdown fence is now accepted, and the model prompt includes full analyzed/non-food JSON templates. If the response still fails, check the Go terminal for `foodlens_ai_response_rejected` and its `reason`/`field`. Share only that controlled diagnostic line, never your key, image bytes or a complete model response. For example, `output_truncated` identifies an unfinished answer; `missing_field` identifies schema drift. The public message stays safe and generic. No live response was reproduced during this fix, so these changes do not establish the cause of a previous individual request.

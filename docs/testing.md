@@ -1,3 +1,35 @@
+# Latest verification — invalid-response reliability (2026-10-27)
+
+- Root: `/usr/lib/go-1.26/bin/gofmt -w backend` — exit 0.
+- backend: `GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go test ./... && GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go vet ./...` — exit 0; ai/api/config/food passed, vet produced no diagnostics.
+- frontend: `npm run lint && npm test && npm run build` — exit 0; TypeScript passed, all 18 tests passed, Vite built 30 modules.
+- Root: `git diff --check` — exit 0.
+
+New backend regressions cover valid plain/whitespace/BOM/fenced food JSON, rejected prose/multiple fences/truncation/invalid ranges, typed missing/type/range/value/size errors, and adapter diagnostic reasons. Captured logs are checked for absence of synthetic secrets, image data, raw model text and Authorization headers. Existing upload, discovery, timeout, quota, API and frontend regressions pass.
+
+The wrapped-JSON regression passes through the real HTTP adapter with a fake transport. The user's actual cloud response was not available; no live reproduction, paid request or root-cause confirmation is claimed. The updated backend diagnostic can identify the next real rejection safely. Thinking remains at provider defaults; no unsupported control or schema-enforcement parameter was added. Public API/result fields and key-only configuration remain unchanged.
+
+Earlier records below describe preceding milestones/configuration.
+
+---
+
+# Latest verification — key-only configuration (2026-10-27)
+
+Only OLLAMA_API_KEY remains in .env.example and private backend/.env. Assignment-name-only inspection confirmed this without printing values; production-source inspection found only OLLAMA_API_KEY passed to os.Getenv. `git check-ignore backend/.env` returned exit 0 and listed the private file. An existing private key assignment was preserved during cleanup; no real key value was printed.
+
+Exact commands/results from this follow-up:
+
+- Root: `/usr/lib/go-1.26/bin/gofmt -w backend` — exit 0.
+- In backend: `GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go test ./... && GOCACHE=/tmp/foodlens-go-cache /usr/lib/go-1.26/bin/go vet ./...` — exit 0; ai/api/config/food passed; vet had no diagnostics. Server/validation have no separate test files.
+- In frontend: `npm run lint && npm test && npm run build` — exit 0; TypeScript passed, all 18 tests passed, Vite built 30 modules.
+- Root: `git diff --check` — exit 0.
+
+New/revised config tests cover fixed defaults despite obsolete exported settings, invalid/missing/redacted keys, key-only private file loading, exported-key precedence, literal quoting/no command expansion, unknown file settings, atomic parse failure and missing private files. Existing discovery/provider/API/frontend tests remain passing. No live-provider request or free account entitlement was verified. Success schemas and food prompt are unchanged; runtime defaults are fixed in Go rather than configured through other variables.
+
+The records below are historical milestone evidence and may describe configuration options superseded by this key-only follow-up.
+
+---
+
 # Current verification — Ollama Cloud milestone (2026-10-27)
 
 Environment: Node 20.19.2, npm 10.8.2, Vite 6.4.5, Vitest 3.2.7. Go checks use the installed standalone `/usr/lib/go-1.26/bin/go` with writable `GOCACHE=/tmp/foodlens-go-cache`; module minimum remains Go 1.22. Historical records below describe earlier environments and do not override this report.
@@ -45,7 +77,7 @@ The official hosted public model listing checked via native web access on 2026-1
 ## Remaining local integration steps
 
 1. Check signed-in Ollama account model access, usage credits/billing and current hosted tags.
-2. Export the key privately and set `OLLAMA_MODEL=gemma4:31b` following README; start Go and Vite.
+2. Set only OLLAMA_API_KEY in private backend/.env following README; start Go and Vite.
 3. With one permitted non-sensitive food photo, verify preview → analysis → ranges/uncertainty → copy, removal, and narrow-screen layout. Confirm the browser calls only Go.
 4. Record the actual model/result/time and any errors without keys or private images. Do not treat public listing or mocked success as proof of account access or model quality.
 

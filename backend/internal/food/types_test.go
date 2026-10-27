@@ -32,3 +32,36 @@ func TestParse(t *testing.T) {
 		})
 	}
 }
+
+func TestFormattingWrappers(t *testing.T) {
+	for _, value := range []string{validJSON, " \n" + validJSON + "\n ", "\xef\xbb\xbf" + validJSON, "```json\n" + validJSON + "\n```", "```\r\n" + validJSON + "\r\n```"} {
+		result, err := Parse([]byte(value))
+		if err != nil || result.Status != "analyzed" {
+			t.Fatalf("valid formatting wrapper rejected: %v", err)
+		}
+	}
+	for _, value := range []string{"Here is the result:\n" + validJSON, "```json\n" + validJSON + "\n```\nmore text", "```json\n" + validJSON, "```json\n" + validJSON + "\n```\n```json\n" + validJSON + "\n```", "```json\n" + strings.Replace(validJSON, `"min":200`, `"min":900`, 1) + "\n```"} {
+		if _, err := Parse([]byte(value)); err == nil {
+			t.Fatal("unsafe/malformed result accepted")
+		}
+	}
+}
+func TestSafeValidationReasons(t *testing.T) {
+	for _, tc := range []struct{ body, reason, field string }{
+		{"{private-model-content", "invalid_json", ""},
+		{strings.Replace(validJSON, `"dishName":"Likely rice",`, "", 1), "missing_field", "dishName"},
+		{strings.Replace(validJSON, `"min":200`, `"min":"private-model-content"`, 1), "invalid_type", ""},
+		{strings.Replace(validJSON, `"min":200`, `"min":900`, 1), "invalid_range", "nutritionEstimate.caloriesKcal"},
+		{strings.Replace(validJSON, `"medium"`, `"private-model-content"`, 1), "invalid_value", "identificationConfidence"},
+		{strings.Repeat("x", MaxResponseBytes+1), "output_too_large", ""},
+	} {
+		_, err := Parse([]byte(tc.body))
+		safe, ok := err.(*ValidationError)
+		if !ok || safe.Reason != tc.reason || safe.Field != tc.field {
+			t.Fatalf("wrong diagnostic: %v", err)
+		}
+		if strings.Contains(err.Error(), "private-model-content") {
+			t.Fatal("model content leaked")
+		}
+	}
+}

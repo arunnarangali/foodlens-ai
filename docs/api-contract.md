@@ -58,6 +58,7 @@ The backend rejects missing/unknown fields, trailing JSON, invalid ranges/confid
 | Missing, empty, malformed or extra upload parts | 400 BAD_REQUEST or INVALID_IMAGE |
 | Oversized file/request | 413 IMAGE_TOO_LARGE |
 | Unsupported content | 415 UNSUPPORTED_MEDIA_TYPE |
+| Default model absent or missing vision/completion capabilities | 503 AI_MODEL_UNAVAILABLE |
 | Provider authentication, invalid/unavailable model, network/service failures | 503 AI_UNAVAILABLE |
 | Provider 402/payment/quota or 429/rate limit | 429 RATE_LIMITED |
 | Provider deadline or upstream 408/504 | 504 AI_TIMEOUT |
@@ -68,4 +69,14 @@ The backend rejects missing/unknown fields, trailing JSON, invalid ranges/confid
 
 All API responses use application/json and Cache-Control: no-store. Provider errors and credentials are never returned. Client cancellation propagates to the cloud request.
 
-Provider deadline defaults to 120 seconds (configured 1–180); processing deadline is provider deadline + 15 seconds. Server write deadline is 200 seconds and browser request deadline is 210 seconds. Health behaviour is unchanged; there is no separate readiness endpoint.
+Provider deadline is fixed at 120 seconds, including model discovery; processing deadline is 135 seconds. Server write deadline is 200 seconds and browser request deadline is 210 seconds. Health behaviour is unchanged; there is no separate readiness endpoint.
+
+## Backend setup
+
+Only OLLAMA_API_KEY is configurable, through private backend/.env or an exported backend environment variable. Defaults are fixed in Go. Before inference the backend verifies the default gemma4:31b capability listing; discovery cannot determine whether the account's requests are free. Health remains process-only. Success response fields and frontend types are unchanged by this configuration simplification.
+
+## Response-format reliability follow-up
+
+The parser accepts surrounding whitespace, an optional UTF-8 BOM, or a single complete plain/json Markdown code fence around the entire food object. It does not extract arbitrary JSON from prose, repair malformed JSON, invent missing values or relax nutrition validation. Public error shape and status remain unchanged.
+
+For AI_INVALID_RESPONSE the backend logs controlled rejection metadata: model ID, reason, approved field name where available and response byte count. Reasons distinguish invalid envelope, incomplete response, token truncation, empty content, invalid JSON, missing fields, invalid types/values/ranges and output limits. Raw model content, decoder errors, images and credentials are excluded. This is backend troubleshooting information, not a new frontend API field.

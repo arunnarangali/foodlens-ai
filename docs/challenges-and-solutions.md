@@ -42,3 +42,13 @@ Git metadata is now present. The existing ignore file lacked TypeScript build me
 - Copy access can fail or be unavailable. The UI announces failure and supplies selectable text; tests cover both clipboard outcomes.
 
 Mocked provider auth, quota, bad-model and network responses are test scenarios, not live incidents. No actual cloud output, billing failure or model-quality observation is invented.
+
+## Key-only setup follow-up — 2026-10-27
+
+The prior source accepted optional address/model/timeout/allowlist variables while README still described the older exported-variable workflow. The user requested only a key. Configuration now reads only OLLAMA_API_KEY, old exported settings cannot override fixed defaults, and private-file loading accepts only the key. Documentation now explains the explicit loader and fixed model selection. Hosted model metadata cannot identify free eligibility; no free-price inference was fabricated. Existing private key values were preserved without appearing in tool output.
+
+## Invalid-response diagnosis and compatibility — 2026-10-27
+
+Observed: the user received the generic AI_INVALID_RESPONSE error. Code review confirmed that envelope, truncation, JSON and semantic failures were all collapsed into that code without safe diagnostic metadata. The exact live reason was not available and is not asserted.
+
+Fix: keep the public error stable while logging controlled reason/approved-field/size metadata only; replace raw parsing errors with safe typed validation errors. Add complete analyzed/non-food output templates. A mocked regression demonstrates acceptance of valid JSON wrapped in a whole-response Markdown fence; surrounding prose, multiple objects and invalid nutrient data remain rejected. No claim is made that Markdown was the user's actual failure. Thinking and token/deadline budgets remain unchanged; no live credits consumed.

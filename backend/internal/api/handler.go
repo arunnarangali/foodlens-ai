@@ -61,6 +61,9 @@ func NewHandler(analyzer Analyzer, providerTimeout time.Duration) http.Handler {
 				code = "AI_TIMEOUT"
 			}
 			switch code {
+			case "AI_MODEL_UNAVAILABLE":
+				status = 503
+				message = "No approved vision model is available. Check the backend model settings and your Ollama account allowance."
 			case "AI_TIMEOUT":
 				status = 504
 				message = "Analysis timed out. Please try again."

@@ -1,12 +1,14 @@
 package ai
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"foodlens/backend/internal/food"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"testing"
@@ -140,5 +142,54 @@ func TestNoRedirects(t *testing.T) {
 	_, err := client.Analyze(context.Background(), []byte("image"), "image/png")
 	if calls != 1 || err == nil || err.Error() != "AI_UNAVAILABLE" {
 		t.Fatal("redirect followed")
+	}
+}
+
+func TestFencedModelJSON(t *testing.T) {
+	client := New("https://ollama.com/api", "unit-test-secret", "gemma4:31b", time.Second, transportFunc(func(*http.Request) (*http.Response, error) {
+		return response(200, envelope("```json\n"+analysisJSON+"\n```")), nil
+	}))
+	result, err := client.Analyze(context.Background(), []byte("image"), "image/png")
+	if err != nil || result.Status != "analyzed" {
+		t.Fatalf("fenced JSON regression: %v", err)
+	}
+}
+func TestRejectionDiagnosticsNeverLogContent(t *testing.T) {
+	for _, tc := range []struct{ name, body, reason string }{
+		{"invalid envelope", "{private-model-content", "invalid_envelope"},
+		{"truncated", strings.Replace(envelope(analysisJSON), `"stop"`, `"length"`, 1), "output_truncated"},
+		{"incomplete", strings.Replace(envelope(analysisJSON), `"done":true`, `"done":false`, 1), "incomplete_response"},
+		{"empty", envelope("   "), "empty_content"},
+		{"invalid JSON", envelope("private-model-content"), "invalid_json"},
+		{"missing field", envelope(strings.Replace(analysisJSON, `"dishName":"Likely vegetable rice",`, "", 1)), "missing_field"},
+		{"range", envelope(strings.Replace(analysisJSON, `"min":200`, `"min":900`, 1)), "invalid_range"},
+		{"unknown field", envelope(strings.Replace(analysisJSON, `"status":`, `"private-model-content":"private-model-content","status":`, 1)), "invalid_type"},
+		{"output limit", strings.Repeat("x", MaxEnvelopeBytes+1), "output_too_large"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var logs bytes.Buffer
+			old := log.Writer()
+			log.SetOutput(&logs)
+			defer log.SetOutput(old)
+			client := New("https://ollama.com/api", "unit-test-secret", "gemma4:31b", time.Second, transportFunc(func(*http.Request) (*http.Response, error) { return response(200, tc.body), nil }))
+			_, err := client.Analyze(context.Background(), []byte("private-image-content"), "image/png")
+			if err == nil || err.Error() != "AI_INVALID_RESPONSE" {
+				t.Fatal("public error changed")
+			}
+			output := logs.String()
+			if !strings.Contains(output, `reason="`+tc.reason+`"`) || !strings.Contains(output, "response_bytes=") {
+				t.Fatalf("missing controlled diagnostic: %s", output)
+			}
+			for _, secret := range []string{"unit-test-secret", "private-model-content", "private-image-content", "Authorization"} {
+				if strings.Contains(output, secret) {
+					t.Fatal("unsafe diagnostic output")
+				}
+			}
+		})
+	}
+}
+func TestPromptContainsFullOutputShapes(t *testing.T) {
+	if !strings.Contains(Prompt, `"status":"analyzed"`) || !strings.Contains(Prompt, `"status":"notFoodOrUnclear"`) || !strings.Contains(Prompt, `"caloriesKcal":null`) {
+		t.Fatal("missing output templates")
 	}
 }

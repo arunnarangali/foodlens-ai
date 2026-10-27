@@ -40,6 +40,6 @@ Use short vertical slices so a single day produces a demonstrable flow rather th
 
 ## Current cloud integration workflow
 
-Run the existing baseline checks before changing code; this session's baseline passed. Update contract and TypeScript types together, implement a mockable analyzer and test the real cloud HTTP adapter with a fake transport. No live credits or sockets are required for ordinary tests. Use private exported backend variables; Go does not load `.env` automatically. Verify hosted model names with the public tags endpoint and account entitlement/usage separately before one non-sensitive live request.
+Run the existing baseline checks before changing code; this session's baseline passed. Update contract and TypeScript types together, implement a mockable analyzer and test the real cloud HTTP adapter with a fake transport. No live credits or sockets are required for ordinary tests. Use only OLLAMA_API_KEY in private backend/.env or an exported backend key. The server explicitly loads .env from its backend working directory. Verify hosted model names with the public tags endpoint and account entitlement/usage separately before one non-sensitive live request.
 
 Use `go test ./...`, `go vet ./...`, frontend TypeScript checks, Vitest and production build. If the system Go launcher fails, use the installed standalone toolchain and a writable GOCACHE as recorded in testing.md. Do not alter system services or install a local runtime. Keep evidence factual and preserve user staging; this session creates no commit or deployment.
